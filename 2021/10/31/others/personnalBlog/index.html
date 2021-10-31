@@ -1,0 +1,169 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="使用github和hexo快速搭建静态个人博客（最新版）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于github搭建的个人博客">
+<meta property="og:url" content="http://example.com/2021/10/31/others/personnalBlog/index.html">
+<meta property="og:site_name" content="ehuixie&#39;s Blog">
+<meta property="og:description" content="使用github和hexo快速搭建静态个人博客（最新版）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/others/personnalBlog/image-20211030163208657.png">
+<meta property="og:image" content="http://example.com/images/others/personnalBlog/image-20211030163711207.png">
+<meta property="og:image" content="http://example.com/images/others/personnalBlog/image-20211030165002638.png">
+<meta property="og:image" content="http://example.com/images/others/personnalBlog/image-20211030165113717.png">
+<meta property="og:image" content="http://example.com/images/others/personnalBlog/image-20211030165452525.png">
+<meta property="og:image" content="http://example.com/images/others/personnalBlog/image-20211030165540900.png">
+<meta property="og:image" content="http://example.com/images/others/personnalBlog/image-20211030165844689.png">
+<meta property="article:published_time" content="2021-10-31T00:42:29.000Z">
+<meta property="article:modified_time" content="2021-10-31T01:59:16.955Z">
+<meta property="article:author" content="ehxie">
+<meta property="article:tag" content="hexo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/others/personnalBlog/image-20211030163208657.png"><title>基于github搭建的个人博客 | ehuixie's Blog</title><link ref="canonical" href="http://example.com/2021/10/31/others/personnalBlog/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"dark","wordWrap":true},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">ehuixie's Blog</div><div class="header-banner-info__subtitle">Thinking more than writing</div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">基于github搭建的个人博客</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-10-31</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-31</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">641</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">4分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><p>使用github和hexo快速搭建静态个人博客（最新版）</p>
+<span id="more"></span>
+
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1mU4y1j72n?p=5" >参考</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+
+        <h2 id="前期准备"   >
+          <a href="#前期准备" class="heading-link"><i class="fas fa-link"></i></a><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2>
+      
+        <h3 id="工具"   >
+          <a href="#工具" class="heading-link"><i class="fas fa-link"></i></a><a href="#工具" class="headerlink" title="工具"></a>工具</h3>
+      <blockquote>
+<p>1.NodeJS</p>
+<p>2.Git</p>
+<p>3.Hexo</p>
+<ul>
+<li><p>Hexo，基于Node.js的博客框架，可以方便地生成静态博客页面，并部署在github上。</p>
+<ul>
+<li>作者是台湾的@tommy351，引用作者的话：hexo: A fast, simple &amp; powerful blog framework, powered by node.js</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装Hexo</span></span><br><span class="line">npm install hexo-cli -g </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看是否安装成功</span></span><br><span class="line">hexo -v</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> hexo-cli: 4.3.0</span></span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h3 id="仓库搭建"   >
+          <a href="#仓库搭建" class="heading-link"><i class="fas fa-link"></i></a><a href="#仓库搭建" class="headerlink" title="仓库搭建"></a>仓库搭建</h3>
+      <blockquote>
+<p>1.注册github</p>
+<p>2.绑定ssh</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 测试是否绑定成功</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 鼠标右键选择<span class="string">&quot;git bash here&quot;</span></span></span><br><span class="line">ssh -T git@github.com</span><br><span class="line"><span class="meta">#</span><span class="bash"> 输入yes</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 看到 Hi,&lt;username&gt;! xxxx 表示绑定成功</span></span><br></pre></td></tr></table></div></figure>
+
+<p>3.创建仓库</p>
+<ul>
+<li>仓库名必须是：&lt;username&gt;.github.io<ul>
+<li>例如我的名字是ehxie则我的仓库名是ehxie.github.io</li>
+</ul>
+</li>
+<li>仓库必须是公开的</li>
+</ul>
+</blockquote>
+
+        <h2 id="生成本地博客"   >
+          <a href="#生成本地博客" class="heading-link"><i class="fas fa-link"></i></a><a href="#生成本地博客" class="headerlink" title="生成本地博客"></a>生成本地博客</h2>
+      <blockquote>
+<p>新建一个文件夹(例如Blog)，进入该文件夹后，右键选择”git bash here”</p>
+</blockquote>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd ./Blog</span><br><span class="line"><span class="meta">#</span><span class="bash"> 初始化</span></span><br><span class="line">hexo init</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动本地服务器</span></span><br><span class="line">hexo s</span><br><span class="line"><span class="meta">#</span><span class="bash"> 看到一下页面表示搭建本地博客成功</span></span><br></pre></td></tr></table></div></figure>
+
+<p><img src="/images/others/personnalBlog/image-20211030163208657.png" alt="/images/others/image-20211030163208657"></p>
+<blockquote>
+<p>发布到互联网</p>
+<ul>
+<li>配置_config.yml<ul>
+<li>将仓库地址改为你自己的地址</li>
+<li>注意：type: git 中间需要有一个空格!!!其他的同理<ul>
+<li>github更新后master变成了main</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight yaml"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">	<span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">	<span class="attr">repository:</span> <span class="string">&lt;仓库地址,绑定ssh必须是以git开头的链接&gt;</span></span><br><span class="line">	<span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></div></figure>
+
+<p>仓库地址</p>
+<ul>
+<li><img src="/images/others/personnalBlog/image-20211030163711207.png" alt="/images/others/image-20211030163711207"></li>
+</ul>
+
+        <h2 id="安装自动部署发布工具"   >
+          <a href="#安装自动部署发布工具" class="heading-link"><i class="fas fa-link"></i></a><a href="#安装自动部署发布工具" class="headerlink" title="安装自动部署发布工具"></a>安装自动部署发布工具</h2>
+      <blockquote>
+<p>在.git目录下打开git命令行界面</p>
+<ul>
+<li>即上面步骤新建的文件夹(Blog)</li>
+</ul>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cd ./Blog</span><br><span class="line"></span><br><span class="line">npm install hexo-deployer-git --save</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 生成页面</span></span><br><span class="line">hexo g</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 部署(上传到github)</span></span><br><span class="line">hexo d </span><br><span class="line"><span class="meta">#</span><span class="bash"> 输入用户名</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 输入密码，这里不要输入密码，用令牌替换密码</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 注意：hexo d 如果失败的话一般都是超时，即上面的仓库地址</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 可以在gitee下载个工具dev-sidecar</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重新打开github后仓库地址就从一个变成四个，选择下面三个其中一个即可</span></span><br></pre></td></tr></table></div></figure>
+</blockquote>
+<blockquote>
+<p>生成令牌</p>
+<p>登录github，点击个人头像旁边的小三角，点击settings，点击Developor settings，然后按下图操作</p>
+<ul>
+<li>No expiration表示令牌不会过期(看个人选择)</li>
+<li>图中的4可以全选</li>
+<li>最后点击generate token</li>
+</ul>
+</blockquote>
+<p><img src="/images/others/personnalBlog/image-20211030165002638.png" alt="/images/others/image-20211030165002638"></p>
+<p>复制令牌，填到密码中</p>
+<p><img src="/images/others/personnalBlog/image-20211030165113717.png" alt="/images/others/image-20211030165113717"></p>
+<p>上传成功</p>
+<ul>
+<li>重新刷新下仓库，可以看到以下的内容</li>
+</ul>
+<p><img src="/images/others/personnalBlog/image-20211030165452525.png" alt="/images/others/image-20211030165452525"></p>
+
+        <h2 id="访问"   >
+          <a href="#访问" class="heading-link"><i class="fas fa-link"></i></a><a href="#访问" class="headerlink" title="访问"></a>访问</h2>
+      <ul>
+<li>点击setting，复制仓库名，到浏览器上</li>
+</ul>
+<p><img src="/images/others/personnalBlog/image-20211030165540900.png" alt="/images/others/image-20211030165540900"></p>
+<ul>
+<li>打开网页，输入仓库名回车即可访问</li>
+</ul>
+<p><img src="/images/others/personnalBlog/image-20211030165844689.png" alt="/images/others/image-20211030165844689"></p>
+
+        <h2 id="说明"   >
+          <a href="#说明" class="heading-link"><i class="fas fa-link"></i></a><a href="#说明" class="headerlink" title="说明"></a>说明</h2>
+      <blockquote>
+<p>这里只是说明了搭建博客的流程</p>
+<ul>
+<li>具体怎么编写博客，怎么自定义这里还没有涉及</li>
+</ul>
+</blockquote>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">ehxie</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/10/31/others/personnalBlog/">http://example.com/2021/10/31/others/personnalBlog/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://example.com/tags/hexo/">hexo</a></span></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/10/31/others/hexo01/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">hexo常见问题</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/10/30/index/"><span class="paginator-prev__text">本站介绍</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">
+          前期准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7"><span class="toc-number">1.1.</span> <span class="toc-text">
+          工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%93%E5%BA%93%E6%90%AD%E5%BB%BA"><span class="toc-number">1.2.</span> <span class="toc-text">
+          仓库搭建</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%9C%AC%E5%9C%B0%E5%8D%9A%E5%AE%A2"><span class="toc-number">2.</span> <span class="toc-text">
+          生成本地博客</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%8F%91%E5%B8%83%E5%B7%A5%E5%85%B7"><span class="toc-number">3.</span> <span class="toc-text">
+          安装自动部署发布工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE"><span class="toc-number">4.</span> <span class="toc-text">
+          访问</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-number">5.</span> <span class="toc-text">
+          说明</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/touxiang.jpeg" alt="avatar"></div><p class="sidebar-ov-author__text">活在心灵牢笼中的人</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">3</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">0</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">1</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2021</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>ehxie</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
