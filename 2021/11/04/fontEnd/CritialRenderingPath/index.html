@@ -1,0 +1,189 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="关键渲染路径        关键渲染路径(Critial Rendering Path)  从服务器获取HTML文件后到页面呈现完整内容发生的事情  分为六步  创建DOM树（Constructing the DOM Tree） 创建CSSOM树（Constructing the CSSOM Tree） 执行脚本（Running JavaScript） 生成渲染树（Creat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="遗传算法解决TSP问题">
+<meta property="og:url" content="http://example.com/2021/11/04/fontEnd/CritialRenderingPath/index.html">
+<meta property="og:site_name" content="ehuixie&#39;s Blog">
+<meta property="og:description" content="关键渲染路径        关键渲染路径(Critial Rendering Path)  从服务器获取HTML文件后到页面呈现完整内容发生的事情  分为六步  创建DOM树（Constructing the DOM Tree） 创建CSSOM树（Constructing the CSSOM Tree） 执行脚本（Running JavaScript） 生成渲染树（Creat">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/fontEnd/CritialRenderingPath/image-20211104212625747.png">
+<meta property="og:image" content="http://example.com/images/fontEnd/CritialRenderingPath/image-20211104213335807.png">
+<meta property="og:image" content="http://example.com/images/fontEnd/CritialRenderingPath/image-20211104214205042.png">
+<meta property="og:image" content="http://example.com/images/fontEnd/CritialRenderingPath/image-20211104220607320.png">
+<meta property="article:published_time" content="2021-11-04T14:18:00.000Z">
+<meta property="article:modified_time" content="2021-11-04T14:19:49.697Z">
+<meta property="article:author" content="ehxie">
+<meta property="article:tag" content="关键渲染路径">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/fontEnd/CritialRenderingPath/image-20211104212625747.png"><title>遗传算法解决TSP问题 | ehuixie's Blog</title><link ref="canonical" href="http://example.com/2021/11/04/fontEnd/CritialRenderingPath/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"dark","wordWrap":true},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">ehuixie's Blog</div><div class="header-banner-info__subtitle">Thinking more than writing</div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">遗传算法解决TSP问题</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-11-04</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-11-04</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">992</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">6分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="关键渲染路径"   >
+          <a href="#关键渲染路径" class="heading-link"><i class="fas fa-link"></i></a><a href="#关键渲染路径" class="headerlink" title="关键渲染路径"></a>关键渲染路径</h1>
+      <blockquote>
+<p>关键渲染路径(Critial Rendering Path)</p>
+<ul>
+<li>从服务器获取HTML文件后到页面呈现完整内容发生的事情</li>
+</ul>
+<p>分为六步</p>
+<ol>
+<li>创建DOM树（Constructing the DOM Tree）</li>
+<li>创建CSSOM树（Constructing the CSSOM Tree）</li>
+<li>执行脚本（Running JavaScript）</li>
+<li>生成渲染树（Creating the Render Tree）</li>
+<li>生成布局（Generating the Layout）</li>
+<li>绘制（Painting）</li>
+</ol>
+</blockquote>
+<span id="more"></span>
+<p><img src="/images/fontEnd/CritialRenderingPath/image-20211104212625747.png" alt="image-20211104212625747"></p>
+
+        <h2 id="创建DOM树"   >
+          <a href="#创建DOM树" class="heading-link"><i class="fas fa-link"></i></a><a href="#创建DOM树" class="headerlink" title="创建DOM树"></a>创建DOM树</h2>
+      <blockquote>
+<p>将HTML中的所有标签生成一棵树</p>
+<ul>
+<li>HTML中的每个元素或文本对应一个节点</li>
+<li>嵌套在元素内的元素会被解析成外层元素的子节点</li>
+</ul>
+<p><strong>注意</strong>：</p>
+<ul>
+<li>HTML可以部分执行<ul>
+<li>即不需要等到全部解析完毕才显示页面</li>
+</ul>
+</li>
+<li>其他资源可能阻塞页面渲染<ul>
+<li>CSS、JavaScript</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight html"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span>  </span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Understanding the Critical Rendering Path<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;style.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span>  </span><br><span class="line">  <span class="tag">&lt;<span class="name">header</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Understanding the Critical Rendering Path<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">main</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Introduction<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>Lorem ipsum dolor sit amet<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">main</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">footer</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">small</span>&gt;</span>Copyright 2017<span class="tag">&lt;/<span class="name">small</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span> </span><br></pre></td></tr></table></div></figure>
+
+<p>上述代码解析为DOM树为：</p>
+<p><img src="/images/fontEnd/CritialRenderingPath/image-20211104213335807.png" alt="image-20211104213335807"></p>
+
+        <h2 id="创建CSSOM树"   >
+          <a href="#创建CSSOM树" class="heading-link"><i class="fas fa-link"></i></a><a href="#创建CSSOM树" class="headerlink" title="创建CSSOM树"></a>创建CSSOM树</h2>
+      <blockquote>
+<p>CSSOM（CSS对象模型）树</p>
+<ul>
+<li>附在DOM结构上的样式的一种表示方式<ul>
+<li>与DOM树类似，只是每个节点带上样式，包括<strong>明确的定义</strong>和<strong>隐式的继承</strong></li>
+</ul>
+</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>CSS是一种<strong>渲染阻塞资源</strong>(render blocking resource)，即需要完全被解析后才能进入渲染树环节，不像HTML能部分执行<ul>
+<li>因为CSS具有继承属性，后面定义的样式会修改或覆盖前面的样式，所以不能部分执行，需要等到完全解析完毕后才能进入下一环节</li>
+</ul>
+</li>
+<li>当CSS文件适用于<strong>当前设备</strong>的时候，<strong>才会</strong>造成渲染阻塞<ul>
+<li>例如：&lt;link rel=”stylesheet”&gt;接受media属性，该属性规定了CSS文件适用于哪种设备<ul>
+<li>当设置为orientation: landscape(横向)的样式，则当我们竖着浏览页面的时候，这个CSS资源就不会起作用，也就不会阻塞</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>在上述HTML页面中，style.css代码如下</p>
+<figure class="highlight css"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123; <span class="attribute">font-size</span>: <span class="number">18px</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">header</span> &#123; <span class="attribute">color</span>: plum; &#125;  </span><br><span class="line"><span class="selector-tag">h1</span> &#123; <span class="attribute">font-size</span>: <span class="number">28px</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">main</span> &#123; <span class="attribute">color</span>: firebrick; &#125;  </span><br><span class="line"><span class="selector-tag">h2</span> &#123; <span class="attribute">font-size</span>: <span class="number">20px</span>; &#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>对应CSSOM树为</p>
+<p><img src="/images/fontEnd/CritialRenderingPath/image-20211104214205042.png" alt="image-20211104214205042"></p>
+
+        <h2 id="执行JavaScript"   >
+          <a href="#执行JavaScript" class="heading-link"><i class="fas fa-link"></i></a><a href="#执行JavaScript" class="headerlink" title="执行JavaScript"></a>执行JavaScript</h2>
+      <blockquote>
+<p>JavaScript是一种**解析阻塞资源(parser blocking resource)**，它能阻塞HTML页面的解析。</p>
+<ul>
+<li>当页面解析到&lt;script&gt;标签，无论内联或外联，页面解析都会阻塞，转而执行JavaScript文件(如果是外联文件则需要先加载)。<ul>
+<li>这就是为什么如果JavaScript文件中有引用HTML中的元素，需要把JavaScript文件放到该元素后面</li>
+</ul>
+</li>
+</ul>
+<p>为了<strong>避免</strong>JavaScript文件<strong>阻塞</strong>页面的解析,可以加上async属性，使得JavaScript文件异步加载</p>
+<figure class="highlight html"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">&quot;script.js&quot;</span>&gt;</span></span><br></pre></td></tr></table></div></figure>
+</blockquote>
+
+        <h2 id="生成渲染树"   >
+          <a href="#生成渲染树" class="heading-link"><i class="fas fa-link"></i></a><a href="#生成渲染树" class="headerlink" title="生成渲染树"></a>生成渲染树</h2>
+      <blockquote>
+<p>渲染树：DOM树和CSSOM树的结合</p>
+<ul>
+<li>包含能最终渲染到页面的元素的树形结构</li>
+<li>不包含那些用CSS样式隐藏的元素<ul>
+<li>例如display:none的元素</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>上述例子的渲染树如下</p>
+<p><img src="/images/fontEnd/CritialRenderingPath/image-20211104220607320.png" alt="image-20211104220607320"></p>
+
+        <h2 id="生成布局"   >
+          <a href="#生成布局" class="heading-link"><i class="fas fa-link"></i></a><a href="#生成布局" class="headerlink" title="生成布局"></a>生成布局</h2>
+      <blockquote>
+<p>布局决定了视口的大小，为CSS样式提供的依据</p>
+<ul>
+<li>例如百分比的换算或者视口的总像素值</li>
+</ul>
+<p><strong>视口大小</strong>是由meta标签的name属性为viewport的内容设置所决定的，如果缺少这个标签，则默认的视口为980px</p>
+<ul>
+<li>常见的viewport设置是自适应于设备尺寸</li>
+</ul>
+<figure class="highlight html"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width,initial-scale=1&quot;</span>&gt;</span></span><br></pre></td></tr></table></div></figure>
+
+<p>例如用户访问一个设备宽度为1000px 的页面</p>
+<ul>
+<li>一半的视口：500px</li>
+<li>10%：10px</li>
+</ul>
+</blockquote>
+
+        <h2 id="绘制"   >
+          <a href="#绘制" class="heading-link"><i class="fas fa-link"></i></a><a href="#绘制" class="headerlink" title="绘制"></a>绘制</h2>
+      <blockquote>
+<p>页面上的可见的内容会转化为屏幕上的<strong>像素点</strong></p>
+<ul>
+<li>绘制过程所花费的时间取决于DOM的大小以及元素的CSS样式</li>
+</ul>
+</blockquote>
+
+        <h2 id="最后"   >
+          <a href="#最后" class="heading-link"><i class="fas fa-link"></i></a><a href="#最后" class="headerlink" title="最后"></a>最后</h2>
+      <blockquote>
+<p>可以利用Chrome开发者工具下的Timeline去观察整个关键路径渲染的过程<br><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25745558" >参考</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</blockquote>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">ehxie</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/11/04/fontEnd/CritialRenderingPath/">http://example.com/2021/11/04/fontEnd/CritialRenderingPath/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://example.com/tags/%E5%85%B3%E9%94%AE%E6%B8%B2%E6%9F%93%E8%B7%AF%E5%BE%84/">关键渲染路径</a></span></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2021/10/20/algorithm/GA/"><span class="paginator-prev__text">遗传算法解决TSP问题</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E6%B8%B2%E6%9F%93%E8%B7%AF%E5%BE%84"><span class="toc-number">1.</span> <span class="toc-text">
+          关键渲染路径</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BADOM%E6%A0%91"><span class="toc-number">1.1.</span> <span class="toc-text">
+          创建DOM树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BACSSOM%E6%A0%91"><span class="toc-number">1.2.</span> <span class="toc-text">
+          创建CSSOM树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8CJavaScript"><span class="toc-number">1.3.</span> <span class="toc-text">
+          执行JavaScript</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%B8%B2%E6%9F%93%E6%A0%91"><span class="toc-number">1.4.</span> <span class="toc-text">
+          生成渲染树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%B8%83%E5%B1%80"><span class="toc-number">1.5.</span> <span class="toc-text">
+          生成布局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%98%E5%88%B6"><span class="toc-number">1.6.</span> <span class="toc-text">
+          绘制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number">1.7.</span> <span class="toc-text">
+          最后</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/touxiang.jpeg" alt="avatar"></div><p class="sidebar-ov-author__text">活在心灵牢笼中的人</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">3</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">3</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">2</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2021</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>ehxie</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
