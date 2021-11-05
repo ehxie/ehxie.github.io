@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="本文详细介绍动态规划，包括  什么是动态规划? 能解决什么问题 动态规划的基本思想 适用条件 作用 算法框架以及优化 以及一道完整的动态规划题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动态规划">
+<meta property="og:url" content="http://example.com/2021/11/05/algorithm/DP/index.html">
+<meta property="og:site_name" content="ehuixie&#39;s Blog">
+<meta property="og:description" content="本文详细介绍动态规划，包括  什么是动态规划? 能解决什么问题 动态规划的基本思想 适用条件 作用 算法框架以及优化 以及一道完整的动态规划题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/algorithm/dp/image-20211105150844203.png">
+<meta property="og:image" content="http://example.com/images/algorithm/dp/image-20211105155926627.png">
+<meta property="og:image" content="http://example.com/images/algorithm/dp/image-20211105163035907.png">
+<meta property="og:image" content="http://example.com/images/algorithm/dp/image-20211105165134463.png">
+<meta property="og:image" content="http://example.com/images/algorithm/dp/image-20211105214857714.png">
+<meta property="article:published_time" content="2021-11-05T13:52:00.000Z">
+<meta property="article:modified_time" content="2021-11-05T13:57:29.969Z">
+<meta property="article:author" content="ehxie">
+<meta property="article:tag" content="DP">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/algorithm/dp/image-20211105150844203.png"><title>动态规划 | ehuixie's Blog</title><link ref="canonical" href="http://example.com/2021/11/05/algorithm/DP/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":false,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"dark","wordWrap":true},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner header-inner--height header-inner--bgcolor"><nav class="header-nav header-nav--sticky"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">动态规划</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-11-05</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-11-05</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">2.7k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">17分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><p> 本文详细介绍动态规划，包括</p>
+<ul>
+<li>什么是动态规划?</li>
+<li>能解决什么问题</li>
+<li>动态规划的基本思想</li>
+<li>适用条件</li>
+<li>作用</li>
+<li>算法框架以及优化</li>
+<li>以及一道完整的动态规划题</li>
+</ul>
+<span id="more"></span>
+
+
+        <h1 id="什么是动态规划？"   >
+          <a href="#什么是动态规划？" class="heading-link"><i class="fas fa-link"></i></a><a href="#什么是动态规划？" class="headerlink" title="什么是动态规划？"></a>什么是动态规划？</h1>
+      <p><strong>动态规划</strong>（Dynamic Programming，DP）是运筹学的一个分支，是求解<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B/6714639" >决策过程</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>最优化的过程。(百度百科)</p>
+<p><strong>多阶段决策问题</strong></p>
+<blockquote>
+<p>在现实生活中，有一类活动的过程，由于它的特殊性，可将过程分成<strong>若干个互相联系的阶段</strong>，在它的每一阶段都需要作出决策，从而使整个过程达到最好的活动效果。</p>
+<p>因此各个阶段决策的选取不能任意确定，它<strong>依赖</strong>于当前面临的状态，又<strong>影响</strong>以后的发展。</p>
+<p>当各个阶段决策确定后，就组成一个<strong>决策序列</strong>，因而也就确定了整个过程的一条活动路线。</p>
+<p>这种把一个问题看作是一个前后关联具有链状结构的多阶段过程就称为多阶段决策过程，这种问题称为<strong>多阶段决策问题</strong>。</p>
+</blockquote>
+<p>在多阶段决策问题中，各个阶段采取的决策，<strong>一般来说是与时间有关的</strong>，决策依赖于<strong>当前状态</strong>，又随即引起<strong>状态的转移</strong>，一个决策序列就是在变化的状态中产生出来的，故有“动态”的含义，称这种解决多阶段决策最优化的过程为<strong>动态规划</strong>方法。</p>
+
+        <h1 id="能解决什么问题？"   >
+          <a href="#能解决什么问题？" class="heading-link"><i class="fas fa-link"></i></a><a href="#能解决什么问题？" class="headerlink" title="能解决什么问题？"></a>能解决什么问题？</h1>
+      <p>动态规划算法<strong>通常</strong>用于求解具有某种<strong>最优</strong>性质的问题。</p>
+<ul>
+<li>在这类问题中，可能会有许多可行解。每一个解都对应于一个值，我们希望找到具有<strong>最优值</strong>的解。</li>
+</ul>
+<p>举例：凑硬币</p>
+<blockquote>
+<p>给你 <code>k</code> 种面值的硬币，面值分别为 <code>c1, c2 ... ck</code>，每种硬币的数量无限，再给一个总金额 <code>amount</code>，问你<strong>最少</strong>需要几枚硬币凑出这个金额，如果不可能凑出，算法返回 -1 。</p>
+<p>例如：amount = 11，面值1，2，5</p>
+<p>可能的解：</p>
+<ul>
+<li>11<ul>
+<li>全部为1</li>
+</ul>
+</li>
+<li>10<ul>
+<li>1个2，9个1</li>
+</ul>
+</li>
+<li>…</li>
+<li>3<ul>
+<li>2个5，1个1</li>
+</ul>
+</li>
+</ul>
+<p>上述例子存在多个可行解，也存在一个最优解(3)，动态规划就是求解这个最优解</p>
+</blockquote>
+
+        <h1 id="基本思想"   >
+          <a href="#基本思想" class="heading-link"><i class="fas fa-link"></i></a><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h1>
+      <p>将待求解问题分解成若干个<strong>子问题</strong>，先求解子问题，然后从这些子问题的解得到原问题的解。</p>
+<blockquote>
+<ul>
+<li>通过<strong>保存已解决的子问题的答案</strong>，而在需要时再找出已求得的答案，这样就可以<strong>避免大量的重复计算</strong>，节省时间。<ul>
+<li>用一个表来记录所有已解的子问题的答案。不管该子问题以后是否被用到，只要它被计算过，就将其结果填入表中。</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+
+        <h1 id="适用条件"   >
+          <a href="#适用条件" class="heading-link"><i class="fas fa-link"></i></a><a href="#适用条件" class="headerlink" title="适用条件"></a>适用条件</h1>
+      <blockquote>
+<p>任何思想方法都有一定的局限性，动态规划也并不是万能的。</p>
+<ul>
+<li>适用动态规划的问题必须满足<strong>最优化原理</strong>和<strong>无后效性</strong></li>
+</ul>
+</blockquote>
+<p><strong>最优化原理</strong>（最优子结构性质）</p>
+<blockquote>
+<p>一个最优化策略的子策略总是最优的。</p>
+<p>举例：考全班第一名(假如只有语数英)</p>
+<ul>
+<li>最优化策略：总分第一名</li>
+<li>最优子策略<ul>
+<li>语文第一名</li>
+<li>数学第一名</li>
+<li>英语第一名</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p><strong>无后效应</strong></p>
+<blockquote>
+<p>对于某个给定的阶段状态，它以前各阶段的状态无法直接影响它未来的决策，而只能通过当前的这个状态。</p>
+<ul>
+<li>每个状态都是过去历史的一个完整总结</li>
+</ul>
+</blockquote>
+
+        <h1 id="作用"   >
+          <a href="#作用" class="heading-link"><i class="fas fa-link"></i></a><a href="#作用" class="headerlink" title="作用"></a>作用</h1>
+      <p>动态规划算法的目的：解决冗余</p>
+<ul>
+<li>将某个问题划分成子问题的方法都可以用递归去实现</li>
+</ul>
+<p>为什么有冗余?</p>
+<ul>
+<li>子问题有重叠性</li>
+</ul>
+<blockquote>
+<p>例如：计算斐波那契数列(斐波那契数列没有求最值，所以<strong>严格来说</strong>不是动态规划问题，只是为了弄明白什么是重叠子问题)</p>
+<ul>
+<li>f(18)、f(17)、f(16)…都会被多次计算，我们希望同一个子问题只计算一次</li>
+<li>解决冗余：把计算过的子问题存起来(db表)，当解决子问题时先去查表，若有答案则直接返回，没有则计算子问题<ul>
+<li>由此可以看出，dp是用空间换取时间(增加空间存储，减少了计算量)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/algorithm/dp/image-20211105150844203.png" alt="image-20211105150844203"></p>
+</blockquote>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不使用动态规划</span></span><br><span class="line"><span class="keyword">var</span> fib = <span class="function"><span class="keyword">function</span> (<span class="params">n</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">1</span> || n == <span class="number">2</span>) <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fib(n-<span class="number">1</span>) + fib(n-<span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 从上图可以发现有很多子问题会被重复的计算</span></span><br></pre></td></tr></table></div></figure>
+
+<p><strong>保存子问题答案</strong></p>
+<p>（自上而下解法）</p>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fib = <span class="function"><span class="keyword">function</span> (<span class="params">n</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> memo = []</span><br><span class="line">    <span class="keyword">return</span> db(memo,n)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> db = <span class="function"><span class="keyword">function</span> (<span class="params">memo,n</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">1</span> || n == <span class="number">2</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(memo[n] != <span class="literal">undefined</span>) <span class="keyword">return</span> memo[n]</span><br><span class="line">    memo[n] = db(memo,n-<span class="number">1</span>) + db(memo,n-<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> memo[n]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>memo表的作用：剪枝</p>
+<p><img src="/images/algorithm/dp/image-20211105155926627.png" alt="image-20211105155926627"></p>
+<p>后面是优化，本例子只是为了弄明白什么是重叠子问题，如果不想看优化可以跳到“算法框架”</p>
+<p>（自下而上解法）</p>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 类似动态规划</span></span><br><span class="line"><span class="comment">// 声明了一个db数组(相当于一个表，保存已经得到解决的子问题的结果)</span></span><br><span class="line"><span class="keyword">var</span> fib = <span class="function"><span class="keyword">function</span> (<span class="params">n</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> db = []</span><br><span class="line">    db[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    db[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">2</span>;i&lt;n;i++)&#123;</span><br><span class="line">        db[i] = db[i-<span class="number">1</span>] + db[i-<span class="number">2</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> db[n-<span class="number">1</span>]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></div></figure>
+
+<p>优化：节省空间（压缩状态表）</p>
+<ul>
+<li>因为计算db(n)只需要db(n-1)和db(n-2)，前面的值都不需要了，所以不用保存，这里只需要用两个变量保存即可</li>
+</ul>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fib = <span class="function"><span class="keyword">function</span> (<span class="params">n</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">1</span> || n== <span class="number">2</span>) <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">let</span> pre = <span class="number">1</span>,curr = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">2</span>;i&lt;n;i++)&#123;</span><br><span class="line">        <span class="keyword">let</span> sum = pre + curr</span><br><span class="line">        pre = curr</span><br><span class="line">        curr = sum</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> curr</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h1 id="算法框架"   >
+          <a href="#算法框架" class="heading-link"><i class="fas fa-link"></i></a><a href="#算法框架" class="headerlink" title="算法框架"></a>算法框架</h1>
+      <p>通过上面的学习，我们对动态规划有了一定的认识了。通过前人的大量实践和总结，得到了以下方法。</p>
+<blockquote>
+<p>请确保已明白以下概念(上文都有涉及)</p>
+<ul>
+<li><p>重叠的子问题</p>
+</li>
+<li><p>备忘录(或者DB table)</p>
+</li>
+<li><p>最优子结构</p>
+</li>
+</ul>
+<p>新增概念</p>
+<ul>
+<li>base case<ul>
+<li>最小子问题：例如上面斐波那契数列的fib(0)、fib(1)和fib(2)</li>
+</ul>
+</li>
+<li>状态<ul>
+<li>和开头提到的多阶段决策的状态一样</li>
+<li>一般在决策过程中发生变化的变量<ul>
+<li>在上面的斐波那契数列中就是n</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>状态转移方程<ul>
+<li>在当前状态做了某个选择后会转移到下一个状态</li>
+<li>上面的斐波那契数列的转移方程是<ul>
+<li>把 <code>fib(n)</code> 想做一个状态 <code>n</code>，这个状态 <code>n</code> 是由状态 <code>n - 1</code> 和状态 <code>n - 2</code> 相加转移而来</li>
+<li><img src="/images/algorithm/dp/image-20211105163035907.png" alt="image-20211105163035907"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>重叠子问题、最优子结构、状态转移方程就是动态规划<strong>三要素</strong></p>
+<ul>
+<li>写出状态转移方程是<strong>最困难</strong>的</li>
+</ul>
+<p>为什么是以上三要素？</p>
+<blockquote>
+<p><strong>求解动态规划的核心问题是穷举所有可行解</strong>。</p>
+<ul>
+<li>穷举所有可行解其实并不是一件容易的事，只有列出**正确的<code>状态转移方程</code>**，才能正确地穷举。</li>
+<li>暴力穷举的话效率会极其低下，所以需要<code>备忘录</code>或者<code>DP table</code>来优化穷举过程，避免不必要的计算</li>
+<li>态规划问题一定会<strong>具备</strong><code>最优子结构</code>，才能通过子问题的最值得到原问题的最值</li>
+</ul>
+</blockquote>
+<p>动态规划套路：确定<code>状态</code>-&gt;根据状态得到<code>base case</code> -&gt; 确定<code>状态转移方程</code> -&gt; 定义 dp 数组/函数的含义</p>
+<ul>
+<li>优化：压缩状态表</li>
+</ul>
+
+        <h1 id="实践"   >
+          <a href="#实践" class="heading-link"><i class="fas fa-link"></i></a><a href="#实践" class="headerlink" title="实践"></a>实践</h1>
+      
+        <h2 id="问题"   >
+          <a href="#问题" class="heading-link"><i class="fas fa-link"></i></a><a href="#问题" class="headerlink" title="问题"></a>问题</h2>
+      <p>leetcode上322题：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/coin-change" >零钱兑换</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>问题描述</p>
+<blockquote>
+<p>给你一个整数数组 coins ，表示不同面额的硬币；以及一个整数 amount ，表示总金额。</p>
+<p>计算并返回可以凑成总金额所需的 最少的硬币个数 。如果没有任何一种硬币组合能组成总金额，返回 -1 。</p>
+<p>你可以认为每种硬币的数量是无限的。</p>
+</blockquote>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数签名</span></span><br><span class="line"><span class="keyword">var</span> coinChange = <span class="function"><span class="keyword">function</span>(<span class="params">coins, amount</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></div></figure>
+
+<p>示例</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：coins = [1, 2, 5], amount = 11</span><br><span class="line">输出：3 </span><br><span class="line">解释：11 = 5 + 5 + 1</span><br></pre></td></tr></table></div></figure>
+
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：coins = [2], amount = 3</span><br><span class="line">输出：-1</span><br></pre></td></tr></table></div></figure>
+
+
+        <h2 id="解决"   >
+          <a href="#解决" class="heading-link"><i class="fas fa-link"></i></a><a href="#解决" class="headerlink" title="解决"></a>解决</h2>
+      <blockquote>
+<p>解题思路</p>
+<ul>
+<li>划分子问题<ul>
+<li>将amount进行划分，变成一个个子问题，即所有子问题状态：amount - coins[i] (i=0,1,2,…,coins.length-1)</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>1.确定状态</p>
+<ul>
+<li>amount就表示状态</li>
+<li>每次决策(选择一个硬币)后状态都会从 <code>amount</code> 变为 <code>amount - coins[i]</code></li>
+</ul>
+<p>2.确定base case</p>
+<ul>
+<li><p>子问题状态的可能有三种</p>
+<ul>
+<li>大于0、等于0、小于0<ul>
+<li>大于0继续划分子问题</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>由划分子问题状态可以得到base case</p>
+<ul>
+<li>等于0：可行解的一种，返回硬币数量</li>
+<li>小于0：这种决策序列没有可行解，返回-1</li>
+</ul>
+</li>
+</ul>
+<p>3.状态转移方程</p>
+<p>说明：min{dp(n-coin) + 1 | coin∈coins} , n&gt;0</p>
+<ul>
+<li>当n&gt;0时，在状态n的时候，进行coins.length次的决策，取里面决策后的最小值<ul>
+<li>例如n=11，coins = [1,2,5]<ul>
+<li>min( db(10), db(9), db(6)) ，即得到<code>最优子结构</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/algorithm/dp/image-20211105165134463.png" alt="image-20211105165134463"></p>
+<p><strong>暴力解法</strong>(lc上显示超时)</p>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> coinChange = <span class="function"><span class="keyword">function</span> (<span class="params">coins, amount</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> db = <span class="function">(<span class="params">status</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> res = <span class="built_in">Number</span>.MAX_SAFE_INTEGER</span><br><span class="line">        <span class="keyword">if</span> (status == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> (status &lt; <span class="number">0</span>) <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> (coin <span class="keyword">of</span> coins) &#123;</span><br><span class="line">            <span class="keyword">let</span> subProblem = db(status - coin)</span><br><span class="line">            <span class="keyword">if</span> (subProblem == -<span class="number">1</span>) <span class="keyword">continue</span></span><br><span class="line">            res = <span class="built_in">Math</span>.min(res, subProblem + <span class="number">1</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res == <span class="built_in">Number</span>.MAX_SAFE_INTEGER ? -<span class="number">1</span> : res</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> db(amount)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>备忘录解法</strong></p>
+<ul>
+<li>消除重复子问题</li>
+</ul>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> coinChange = <span class="function"><span class="keyword">function</span> (<span class="params">coins, amount</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> memo = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">    <span class="keyword">const</span> db = <span class="function">(<span class="params">status</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (status == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> (status &lt; <span class="number">0</span>) <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span>(memo.get(status)) <span class="keyword">return</span> memo.get(status)</span><br><span class="line">        <span class="keyword">let</span> res = <span class="built_in">Number</span>.MAX_SAFE_INTEGER</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (coin <span class="keyword">of</span> coins) &#123;</span><br><span class="line">            <span class="keyword">let</span> subProblem = db(status - coin)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (subProblem == -<span class="number">1</span>) <span class="keyword">continue</span></span><br><span class="line">            res = <span class="built_in">Math</span>.min(res, subProblem + <span class="number">1</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        memo.set(status,res == <span class="built_in">Number</span>.MAX_SAFE_INTEGER?-<span class="number">1</span>:res)</span><br><span class="line">        <span class="keyword">return</span> memo.get(status)</span><br><span class="line">    &#125;</span><br><span class="line">    db(amount)</span><br><span class="line">    <span class="keyword">return</span> db(amount)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>迭代解法</strong>(自底向上)</p>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> coinChange = <span class="function"><span class="keyword">function</span> (<span class="params">coins, amount</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 数组大小为 amount + 1，初始值也为 amount + 1</span></span><br><span class="line">    <span class="keyword">let</span> dbTable = <span class="built_in">Array</span>.from(&#123;<span class="attr">length</span>: amount+<span class="number">1</span>&#125;, <span class="function">() =&gt;</span> amount+<span class="number">1</span>)</span><br><span class="line">    <span class="comment">// base case</span></span><br><span class="line">    dbTable[<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">    <span class="comment">// 遍历所有状态</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> status = <span class="number">0</span>;status &lt; dbTable.length;status++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(coin <span class="keyword">of</span> coins)&#123;</span><br><span class="line">            <span class="keyword">if</span>(status - coin &gt;=<span class="number">0</span>) &#123;</span><br><span class="line">                dbTable[status] = <span class="built_in">Math</span>.min(dbTable[status],<span class="number">1</span>+dbTable[status - coin])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (dbTable[amount] == amount + <span class="number">1</span>)?-<span class="number">1</span>:dbTable[amount]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>为啥 <code>dp</code> 数组初始化为 <code>amount + 1</code> 呢？</p>
+<ul>
+<li>因为凑成 <code>amount</code> 金额的硬币数最多只可能等于 <code>amount</code>（全用 1 元面值的硬币），所以初始化为 <code>amount + 1</code> 就相当于初始化为<strong>正无穷</strong>，便于后续取最小值。</li>
+</ul>
+<p>为啥不直接初始化为 int 型的最大值 <code>Integer.MAX_VALUE</code> 呢？</p>
+<ul>
+<li>因为后面有 <code>dp[i - coin] + 1</code>，这就会导致整型溢出。</li>
+</ul>
+</blockquote>
+<p><img src="/images/algorithm/dp/image-20211105214857714.png" alt="image-20211105214857714"></p>
+
+        <h1 id="参考"   >
+          <a href="#参考" class="heading-link"><i class="fas fa-link"></i></a><a href="#参考" class="headerlink" title="参考"></a>参考</h1>
+      <p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/529408?fr=aladdin" >百度百科</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://labuladong.gitee.io/algo/1/3/" >labuladong</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>(图片也源自此)</p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">ehxie</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/11/05/algorithm/DP/">http://example.com/2021/11/05/algorithm/DP/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://example.com/tags/DP/">DP</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://example.com/tags/JavaScript/">JavaScript</a></span></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2021/11/04/fontEnd/CritialRenderingPath/"><span class="paginator-prev__text">关键渲染路径</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">
+          什么是动态规划？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%83%BD%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">
+          能解决什么问题？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">3.</span> <span class="toc-text">
+          基本思想</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E6%9D%A1%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">
+          适用条件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-number">5.</span> <span class="toc-text">
+          作用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6"><span class="toc-number">6.</span> <span class="toc-text">
+          算法框架</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-number">7.</span> <span class="toc-text">
+          实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.1.</span> <span class="toc-text">
+          问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3"><span class="toc-number">7.2.</span> <span class="toc-text">
+          解决</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">
+          参考</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/touxiang.jpeg" alt="avatar"></div><p class="sidebar-ov-author__text">活在心灵牢笼中的人</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">4</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">3</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">4</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2021</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>ehxie</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
