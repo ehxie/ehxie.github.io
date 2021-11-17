@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="本文是基于JavaScript的发布-订阅者模式内容包括：  什么是发布-订阅模式 如何实现 一个简单的发布-订阅模式 Vue中的发布订阅者 发布-订阅者模式和观察者模式的区别">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript版发布-订阅者模式">
+<meta property="og:url" content="http://example.com/2021/11/17/designPattern/describer/index.html">
+<meta property="og:site_name" content="ehuixie&#39;s Blog">
+<meta property="og:description" content="本文是基于JavaScript的发布-订阅者模式内容包括：  什么是发布-订阅模式 如何实现 一个简单的发布-订阅模式 Vue中的发布订阅者 发布-订阅者模式和观察者模式的区别">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/designPattern/desubscriber/image-20211117150523175.png">
+<meta property="article:published_time" content="2021-11-17T08:44:00.000Z">
+<meta property="article:modified_time" content="2021-11-17T08:46:40.221Z">
+<meta property="article:author" content="ehxie">
+<meta property="article:tag" content="describer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/designPattern/desubscriber/image-20211117150523175.png"><title>JavaScript版发布-订阅者模式 | ehuixie's Blog</title><link ref="canonical" href="http://example.com/2021/11/17/designPattern/describer/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":false,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"dark","wordWrap":true},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner header-inner--height header-inner--bgcolor"><nav class="header-nav header-nav--sticky"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">JavaScript版发布-订阅者模式</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-11-17</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-11-17</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">1.3k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">9分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><p>本文是基于JavaScript的发布-订阅者模式<br>内容包括：</p>
+<ul>
+<li>什么是发布-订阅模式</li>
+<li>如何实现</li>
+<li>一个简单的发布-订阅模式</li>
+<li>Vue中的发布订阅者</li>
+<li>发布-订阅者模式和观察者模式的区别</li>
+</ul>
+<span id="more"></span>
+
+        <h1 id="什么是发布-订阅模式？"   >
+          <a href="#什么是发布-订阅模式？" class="heading-link"><i class="fas fa-link"></i></a><a href="#什么是发布-订阅模式？" class="headerlink" title="什么是发布-订阅模式？"></a>什么是发布-订阅模式？</h1>
+      
+        <h2 id="定义"   >
+          <a href="#定义" class="heading-link"><i class="fas fa-link"></i></a><a href="#定义" class="headerlink" title="定义"></a>定义</h2>
+      <p>发布-订阅模式：一种对象间一对多的依赖关系</p>
+<ul>
+<li>当一个对象的状态发送改变时，所有<strong>依赖于</strong>它的对象都将得到状态改变的通知。</li>
+</ul>
+<blockquote>
+<p>订阅者（Subscriber）把自己想订阅的事件<strong>注册</strong>（Subscribe）到调度中心（Event Channel）</p>
+<p>发布者（Publisher）<strong>发布</strong>订阅者注册的事件（Publish Event）到调度中心</p>
+<ul>
+<li>该事件触发时，由调度中心统一调度（Fire Event）订阅者注册到调度中心的处理代码</li>
+</ul>
+</blockquote>
+<p>常见的发布订阅者模式：Vue的自定义事件、node的事件处理机制</p>
+
+        <h2 id="例子"   >
+          <a href="#例子" class="heading-link"><i class="fas fa-link"></i></a><a href="#例子" class="headerlink" title="例子"></a>例子</h2>
+      <p>订阅公众号为例，当用户订阅公众号后，每当有文章推送，就会自动发送给用户</p>
+<blockquote>
+<p>典型的发布订阅模式</p>
+<ul>
+<li>公众号属于发布者，用户属于订阅者</li>
+<li>用户将订阅公众号的事件注册到调度中心</li>
+<li>公众号作为发布者，当有新文章发布时，公众号发布该事件到调度中心，调度中心会及时发消息告知用户</li>
+</ul>
+</blockquote>
+
+        <h1 id="如何实现？"   >
+          <a href="#如何实现？" class="heading-link"><i class="fas fa-link"></i></a><a href="#如何实现？" class="headerlink" title="如何实现？"></a>如何实现？</h1>
+      <p>基本思想</p>
+<ul>
+<li>一个类(EventEmitter)的实例中存储了订阅的函数(callback)，调用者通过名字(event)来触发函数</li>
+</ul>
+
+        <h1 id="一个简单的发布-订阅模式"   >
+          <a href="#一个简单的发布-订阅模式" class="heading-link"><i class="fas fa-link"></i></a><a href="#一个简单的发布-订阅模式" class="headerlink" title="一个简单的发布-订阅模式"></a>一个简单的发布-订阅模式</h1>
+      <p><strong>EventEmitter</strong></p>
+<ul>
+<li>发布-订阅类</li>
+</ul>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventEmitter</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 用于存储订阅事件名以及事件</span></span><br><span class="line">        <span class="built_in">this</span>.events = &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 订阅事件</span></span><br><span class="line">    <span class="function"><span class="title">on</span>(<span class="params">event,cb</span>)</span>&#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * event: 订阅事件名</span></span><br><span class="line"><span class="comment">         * fn: 事件</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">// 若订阅已存在则直接添加，否则创建一个空数组后添加</span></span><br><span class="line">        (<span class="built_in">this</span>.events[event] || (<span class="built_in">this</span>.events[event] = [])).push(cb)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 发布事件</span></span><br><span class="line">    <span class="function"><span class="title">emit</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 订阅事件存在才能发布</span></span><br><span class="line">        <span class="built_in">this</span>.events[event] &amp;&amp; <span class="built_in">this</span>.events[event].forEach(<span class="function"><span class="params">cb</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="comment">// 遍历并执行该事件绑定的所有事件</span></span><br><span class="line">            cb()</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>使用</strong></p>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> publisher = <span class="keyword">new</span> EventEmitter();  <span class="comment">// 声明一个公众号 publisher</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 用户一订阅 news 专栏</span></span><br><span class="line">publisher.on(<span class="string">&#x27;news&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;帅哥，您订阅的文章更新啦!&quot;</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 用户二订阅 news 专栏</span></span><br><span class="line">publisher.on(<span class="string">&#x27;news&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;美女，您订阅的文章更新啦!&quot;</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 公众号更新 news专栏</span></span><br><span class="line">publisher.emit(<span class="string">&#x27;news&#x27;</span>)</span><br></pre></td></tr></table></div></figure>
+
+<p>上面代码输出：</p>
+<blockquote>
+<p>帅哥，您订阅的文章更新啦!<br>美女，您订阅的文章更新啦!</p>
+</blockquote>
+<p><strong>完善发布订阅者</strong></p>
+<ul>
+<li>可以只订阅一次</li>
+</ul>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventEmitter</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 用于存储订阅事件名以及事件</span></span><br><span class="line">        <span class="built_in">this</span>.events = &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 订阅事件</span></span><br><span class="line">    <span class="function"><span class="title">on</span>(<span class="params">event,cb</span>)</span>&#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * event: 订阅事件名</span></span><br><span class="line"><span class="comment">         * fn: 事件</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">// 若订阅已存在则直接添加，否则创建一个空数组后添加</span></span><br><span class="line">        (<span class="built_in">this</span>.events[event] || (<span class="built_in">this</span>.events[event] = [])).push(cb)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 发布事件</span></span><br><span class="line">    <span class="function"><span class="title">emit</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 订阅事件存在才能发布</span></span><br><span class="line">        <span class="built_in">this</span>.events[event] &amp;&amp; <span class="built_in">this</span>.events[event].forEach(<span class="function"><span class="params">cb</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="comment">// 遍历并执行该事件绑定的所有事件</span></span><br><span class="line">            cb()</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 订阅事件，只执行一次</span></span><br><span class="line">    <span class="function"><span class="title">once</span>(<span class="params">event,cb</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> fn = <span class="function">()=&gt;</span>&#123;</span><br><span class="line">            cb()</span><br><span class="line">            <span class="built_in">this</span>.removeListener(event,fn)</span><br><span class="line">        &#125;</span><br><span class="line">        on(event,fn)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 移除订阅事件</span></span><br><span class="line">    <span class="function"><span class="title">removeListener</span>(<span class="params">event,cb</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.events[event] &amp;&amp; <span class="built_in">this</span>.events[event].fillter(<span class="function"><span class="params">fn</span>=&gt;</span>fn!=cb)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h1 id="Vue中的发布订阅者"   >
+          <a href="#Vue中的发布订阅者" class="heading-link"><i class="fas fa-link"></i></a><a href="#Vue中的发布订阅者" class="headerlink" title="Vue中的发布订阅者"></a>Vue中的发布订阅者</h1>
+      <blockquote>
+<p>在Vue中Vue实例既是发布者，也是订阅者，又是消息中心。</p>
+</blockquote>
+
+        <h2 id="使用"   >
+          <a href="#使用" class="heading-link"><i class="fas fa-link"></i></a><a href="#使用" class="headerlink" title="使用"></a>使用</h2>
+      <p>1.Vue自定义事件</p>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> vm = <span class="keyword">new</span> Vue()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 订阅事件</span></span><br><span class="line">vm.$on(<span class="string">&#x27;dataChange&#x27;</span>,</span><br><span class="line">       <span class="function">() =&gt;</span> &#123; </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;dataChange1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line">vm.$on(<span class="string">&#x27;dataChange&#x27;</span>,</span><br><span class="line">       <span class="function">() =&gt;</span> &#123; </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;dataChange2&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 发布事件</span></span><br><span class="line">vm.$emit(<span class="string">&#x27;dataChange&#x27;</span>)</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>输出<br>dataChange1<br>dataChange2</p>
+</blockquote>
+<p>2.可以用于<strong>兄弟组件间通信</strong></p>
+<ul>
+<li>vue 2写法</li>
+<li><strong>注意</strong>：Vue 3.x中<code>$on</code>，<code>$off</code> 和 <code>$once</code> 实例方法已被移除，组件实例不再实现事件触发接口。<ul>
+<li><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://v3.cn.vuejs.org/guide/migration/events-api.html#%E6%A6%82%E8%A7%88" >vue3说明</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>创建一个空的Vue实例作为消息中心，进行订阅和发布</p>
+<ul>
+<li>通过这个实例使得不同组件间可以进行通信</li>
+</ul>
+</blockquote>
+<p>PS：以下三个文件都放在同一个文件夹下</p>
+<p><strong>eventBus.js</strong></p>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&#x27;Vue&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Vue;</span><br></pre></td></tr></table></div></figure>
+
+<p>comA.vue</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">	&lt;div&gt;</span><br><span class="line">        &lt;button @click=&quot;publish(&#x27;hello&#x27;)&quot;&gt;</span><br><span class="line">            发布</span><br><span class="line">    	&lt;/button&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">import bus from &#x27;./eventBus.js&#x27;</span><br><span class="line">export default &#123;</span><br><span class="line">    motheds:&#123;</span><br><span class="line">        publish(event)&#123;</span><br><span class="line">            bus.$emit(event,&quot;hello world&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></div></figure>
+
+<p>comB.vue</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">	&lt;div&gt;</span><br><span class="line">        订阅者: &#123;&#123;msg&#125;&#125;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">import bus from &#x27;./eventBus.js&#x27;</span><br><span class="line">export default &#123;</span><br><span class="line">    data()&#123;</span><br><span class="line">        return &#123;</span><br><span class="line">            msg:&#x27;&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    mounted()&#123;</span><br><span class="line">        let _this = this</span><br><span class="line">        bus.$on(&#x27;hello&#x27;,function(data)&#123;</span><br><span class="line">            _this.msg = data</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h1 id="发布-订阅者模式和观察者模式的区别"   >
+          <a href="#发布-订阅者模式和观察者模式的区别" class="heading-link"><i class="fas fa-link"></i></a><a href="#发布-订阅者模式和观察者模式的区别" class="headerlink" title="发布-订阅者模式和观察者模式的区别"></a>发布-订阅者模式和观察者模式的区别</h1>
+      <p><strong>观察者模式</strong>是由<strong>具体目标</strong>调度</p>
+<ul>
+<li>比如当事件触发，Dep 就会去调用观察者的方法，所以观察者模式的订阅者与发布者之间是<strong>存在依赖</strong>的。</li>
+</ul>
+<p><strong>发布/订阅模式</strong>由统一<strong>调度中心</strong>调用，因此发布者和订阅者<strong>不需要知道对方的存在</strong>。</p>
+<ul>
+<li>事件中心隔离了发布者与订阅者，减少了互相依赖的关系。</li>
+</ul>
+<p><img src="/images/designPattern/desubscriber/image-20211117150523175.png" alt="image-20211117150523175"></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.jianshu.com/p/e0575e17de2a" >参考</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000019260857" >参考</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/xiaozidewawa/article/details/108381583" >参考</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">ehxie</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/11/17/designPattern/describer/">http://example.com/2021/11/17/designPattern/describer/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://example.com/tags/describer/">describer</a></span></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2021/11/05/algorithm/DP/"><span class="paginator-prev__text">动态规划</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%91%E5%B8%83-%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">
+          什么是发布-订阅模式？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.</span> <span class="toc-text">
+          定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90"><span class="toc-number">1.2.</span> <span class="toc-text">
+          例子</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">
+          如何实现？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%8F%91%E5%B8%83-%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.</span> <span class="toc-text">
+          一个简单的发布-订阅模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Vue%E4%B8%AD%E7%9A%84%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E8%80%85"><span class="toc-number">4.</span> <span class="toc-text">
+          Vue中的发布订阅者</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">4.1.</span> <span class="toc-text">
+          使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%91%E5%B8%83-%E8%AE%A2%E9%98%85%E8%80%85%E6%A8%A1%E5%BC%8F%E5%92%8C%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">5.</span> <span class="toc-text">
+          发布-订阅者模式和观察者模式的区别</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/touxiang.jpeg" alt="avatar"></div><p class="sidebar-ov-author__text">活在心灵牢笼中的人</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">7</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">5</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">7</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2021</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>ehxie</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
