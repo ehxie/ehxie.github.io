@@ -1,0 +1,174 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="当需要实现精准倒计时，但setTimerout和setInterval并不理想时，或许你可以看看这篇文章！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript实现精准倒计时">
+<meta property="og:url" content="http://example.com/2021/11/23/fontEnd/JavaScriptTimer/index.html">
+<meta property="og:site_name" content="ehuixie&#39;s Blog">
+<meta property="og:description" content="当需要实现精准倒计时，但setTimerout和setInterval并不理想时，或许你可以看看这篇文章！">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/fontEnd/JavaScriptTimer/1425095227_64_w308_h208.jpg">
+<meta property="og:image" content="http://example.com/images/fontEnd/JavaScriptTimer/Timers.png">
+<meta property="og:image" content="http://example.com/images/fontEnd/JavaScriptTimer/1425117036_60_w420_h263.jpg">
+<meta property="article:published_time" content="2021-11-23T13:32:00.000Z">
+<meta property="article:modified_time" content="2021-11-23T13:39:32.315Z">
+<meta property="article:author" content="ehxie">
+<meta property="article:tag" content="Timer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/fontEnd/JavaScriptTimer/1425095227_64_w308_h208.jpg"><title>JavaScript实现精准倒计时 | ehuixie's Blog</title><link ref="canonical" href="http://example.com/2021/11/23/fontEnd/JavaScriptTimer/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":false,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"dark","wordWrap":true},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner header-inner--height header-inner--bgcolor"><nav class="header-nav header-nav--sticky"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">JavaScript实现精准倒计时</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-11-23</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-11-23</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">1.3k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">7分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><p>当需要实现精准倒计时，但setTimerout和setInterval并不理想时，或许你可以看看这篇文章！</p>
+<span id="more"></span>
+
+
+        <h1 id="「精准」倒计时"   >
+          <a href="#「精准」倒计时" class="heading-link"><i class="fas fa-link"></i></a><a href="#「精准」倒计时" class="headerlink" title="「精准」倒计时"></a>「精准」倒计时</h1>
+      
+        <h2 id="需求"   >
+          <a href="#需求" class="heading-link"><i class="fas fa-link"></i></a><a href="#需求" class="headerlink" title="需求"></a>需求</h2>
+      <ul>
+<li>购物网站需要秒杀倒计时</li>
+<li>抢购倒计时</li>
+<li>倒计时抢红包</li>
+</ul>
+<blockquote>
+<p>有<code>精确</code>计时的需求</p>
+</blockquote>
+<p>JavaScript实现技能功能自然会想到以下两个方法</p>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>()</span><br><span class="line"><span class="built_in">setInterval</span>()</span><br></pre></td></tr></table></div></figure>
+
+
+        <h2 id="存在问题"   >
+          <a href="#存在问题" class="heading-link"><i class="fas fa-link"></i></a><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h2>
+      <p>用以上方法实现后发现，两个手机打开同一个活动页面后倒计时的时间<code>不同</code>，可能存在几秒甚至几分钟的误差。</p>
+<blockquote>
+<p>前几天在抢薛之谦演唱会的票时就发现和朋友的时间不一致(可能这就是导致我没抢到票的原因吧哈哈哈)</p>
+</blockquote>
+
+        <h2 id="可能原因"   >
+          <a href="#可能原因" class="heading-link"><i class="fas fa-link"></i></a><a href="#可能原因" class="headerlink" title="可能原因"></a>可能原因</h2>
+      <p>1.读取的是客户端时间，客户端时间可以随时调整，所以与服务器时间可能不一致。</p>
+<ul>
+<li>运行时间长了，也会造成不一致</li>
+</ul>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以下代码并不一定在1s后执行</span></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;timeout&quot;</span>)</span><br><span class="line">&#125;,<span class="number">1000</span>);</span><br></pre></td></tr></table></div></figure>
+
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1</span></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;timeout&quot;</span>)</span><br><span class="line">&#125;,<span class="number">1000</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>;i&lt;<span class="number">1e10</span>;i++)&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例2</span></span><br><span class="line"><span class="keyword">var</span> start = <span class="keyword">new</span> <span class="built_in">Date</span>().getTime(); </span><br><span class="line"><span class="keyword">var</span> count = <span class="number">0</span>; </span><br><span class="line"> </span><br><span class="line"><span class="comment">//定时器测试</span></span><br><span class="line"><span class="built_in">setInterval</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; </span><br><span class="line">     count++; </span><br><span class="line">     <span class="built_in">console</span>.log( <span class="keyword">new</span> <span class="built_in">Date</span>().getTime() - (start + count * <span class="number">1000</span>)); </span><br><span class="line">&#125;,<span class="number">1000</span>);</span><br></pre></td></tr></table></div></figure>
+
+<ul>
+<li>预期的输出都是0，因为每一秒触发一次，每次+1s</li>
+<li>如果再加上一个定时器执行其他任务的话，这个就会更不准</li>
+</ul>
+<p><img src="/images/fontEnd/JavaScriptTimer/1425095227_64_w308_h208.jpg" alt="1425095227_64_w308_h208"></p>
+<blockquote>
+<p>timeout并不一定在1s后输出</p>
+<ul>
+<li>JS是单线程的</li>
+<li>只有主线程的任务执行完后才会去轮询任务队列<ul>
+<li>主线程 &gt; 微任务 &gt; 宏任务</li>
+<li>setTimeout属于宏任务</li>
+</ul>
+</li>
+<li>只有for执行完主线程没有其他任务时才会去轮询任务队列，任务队列还是遵循先进先出的。</li>
+</ul>
+</blockquote>
+<ol start="2">
+<li><p>没有考虑js冻结运行耗费时间；（特别是移动端容易出现，下滑页面时倒计时不动了）</p>
+</li>
+<li><p>没有考虑页面渲染和函数运行累积时间；</p>
+</li>
+<li><p>其他代码逻辑问题；</p>
+</li>
+</ol>
+
+        <h1 id="计时器原理"   >
+          <a href="#计时器原理" class="heading-link"><i class="fas fa-link"></i></a><a href="#计时器原理" class="headerlink" title="计时器原理"></a>计时器原理</h1>
+      <p>参考前端界大牛John.Resig (jQuery作者) 写的Javascript计时器工作原理 — <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://ejohn.org/blog/how-javascript-timers-work/" >《How JavaScript Timers Work》</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>。</p>
+<blockquote>
+<p>JavaScript是单线程的，必须按队列先后顺序执行</p>
+<ul>
+<li>随着多核CPU的出现，为了充分发挥计算机算力，出现了<code>Web Worker</code>，为JavaScript创造多线程环境，运行主线程创建Worker线程，将一些任务分给Woker线程运行，两个线程互不干扰，Worker线程执行完后将结果返回给主线程</li>
+<li><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2018/07/web-worker.html" >参考</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+</ul>
+</blockquote>
+<p>下图需要垂直往下看</p>
+<ul>
+<li>左边10、20、30、40、50是时间轴，单位为ms</li>
+<li>右边Timer是setTimeout、Interval是setInterval 前面的毫秒数是设置的时间<ul>
+<li>Fires为触发</li>
+</ul>
+</li>
+<li>蓝色块为执行该代码块需要的时间</li>
+<li>第一个代码块约执行18ms、第二个代码块约执行11ms、….</li>
+<li>js是单线程，同一时间只能执行一个js代码<ul>
+<li>当异步事件发生后，回放入执行队列，线程空闲后才会依次执行该队列</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/fontEnd/JavaScriptTimer/Timers.png" alt="img"></p>
+<blockquote>
+<p>第一个模块初始化了两个定时器，第一个定时器在10ms后触发，此时第一个模块还没执行完成，所以该定时器并不会立即执行，会将其回调函数放入执行队列等待执行</p>
+<p>因为Mouse Click CallBack比Timer先触发，所以会先执行Mouse Click CallBack的回调函数在执行Timer(如图)</p>
+<p>第二次触发Interval的时候，第一次触发的Interval并未执行，此时并不管，直接把回调加入队列，所以导致下面两个Interval执行中间没有时间间隔</p>
+</blockquote>
+
+        <h1 id="解决思路"   >
+          <a href="#解决思路" class="heading-link"><i class="fas fa-link"></i></a><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h1>
+      <ol>
+<li><p>客户端http请求服务器时间；</p>
+</li>
+<li><p>服务器响应完成；</p>
+</li>
+<li><p>服务器通过网络传输时间数据到客户端；</p>
+</li>
+<li><p>客户端根据活动开始时间和服务器时间差做倒计时显示；</p>
+</li>
+</ol>
+<blockquote>
+<p>网络也有误差</p>
+<p><strong>当前服务器时间 = 服务器系统返回时间 + 网络传输时间 + 前端渲染时间 + 常量（可选）</strong></p>
+</blockquote>
+<p>计算误差，然后减去误差时间得到等待下次执行时间</p>
+<ul>
+<li>例如每隔1s执行一次，阻塞了1.5s，所以误差有0.5s，就等待0.5s后触发<ul>
+<li>这个0.5s的误差可以计算出</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//进行线程占用</span></span><br><span class="line"><span class="built_in">setInterval</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; </span><br><span class="line">     <span class="keyword">var</span> j = <span class="number">0</span>; </span><br><span class="line">     <span class="keyword">while</span>(j++ &lt; <span class="number">100000000</span>); </span><br><span class="line">&#125;, <span class="number">0</span>); </span><br><span class="line"> </span><br><span class="line"><span class="comment">//倒计时</span></span><br><span class="line"><span class="keyword">var</span>  interval = <span class="number">1000</span>,</span><br><span class="line">       ms = <span class="number">50000</span>,  <span class="comment">//从服务器和活动开始时间计算出的时间差，这里测试用50000ms</span></span><br><span class="line">       count = <span class="number">0</span>,</span><br><span class="line">       startTime = <span class="keyword">new</span> <span class="built_in">Date</span>().getTime();</span><br><span class="line"><span class="keyword">if</span>( ms &gt;= <span class="number">0</span>)&#123;</span><br><span class="line">       <span class="keyword">var</span> timeCounter = <span class="built_in">setTimeout</span>(countDownStart,interval);                  </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">countDownStart</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       count++;</span><br><span class="line">       <span class="keyword">var</span> offset = <span class="keyword">new</span> <span class="built_in">Date</span>().getTime() - (startTime + count * interval);</span><br><span class="line">       <span class="keyword">var</span> nextTime = interval - offset;</span><br><span class="line">       <span class="keyword">var</span> daytohour = <span class="number">0</span>; </span><br><span class="line">       <span class="keyword">if</span> (nextTime &lt; <span class="number">0</span>) &#123; nextTime = <span class="number">0</span> &#125;;</span><br><span class="line">       ms -= interval;</span><br><span class="line">       <span class="built_in">console</span>.log(<span class="string">&quot;误差：&quot;</span> + offset + <span class="string">&quot;ms，下一次执行：&quot;</span> + nextTime + <span class="string">&quot;ms后，离活动开始还有：&quot;</span> + ms + <span class="string">&quot;ms&quot;</span>);</span><br><span class="line">       <span class="keyword">if</span>(ms &lt; <span class="number">0</span>)&#123;</span><br><span class="line">              <span class="built_in">clearTimeout</span>(timeCounter);</span><br><span class="line">       &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">              timeCounter = <span class="built_in">setTimeout</span>(countDownStart,nextTime);</span><br><span class="line">       &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></div></figure>
+
+<p><img src="/images/fontEnd/JavaScriptTimer/1425117036_60_w420_h263.jpg" alt="1425117036_60_w420_h263"></p>
+<p>以上实现可能导致倒计时<strong>忽快忽慢</strong></p>
+<ul>
+<li>例如可以每次减少20ms，慢慢靠近真值，不让用户发觉倒计时变快了。</li>
+</ul>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.xuanfengge.com/js-realizes-precise-countdown.html" >部分代码图片来自</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">ehxie</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/11/23/fontEnd/JavaScriptTimer/">http://example.com/2021/11/23/fontEnd/JavaScriptTimer/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://example.com/tags/Timer/">Timer</a></span></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2021/11/19/vue/reactive/"><span class="paginator-prev__text">Vue响应式原理</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8C%E7%B2%BE%E5%87%86%E3%80%8D%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-number">1.</span> <span class="toc-text">
+          「精准」倒计时</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82"><span class="toc-number">1.1.</span> <span class="toc-text">
+          需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">
+          存在问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E5%8E%9F%E5%9B%A0"><span class="toc-number">1.3.</span> <span class="toc-text">
+          可能原因</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A1%E6%97%B6%E5%99%A8%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">
+          计时器原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">
+          解决思路</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/touxiang.jpeg" alt="avatar"></div><p class="sidebar-ov-author__text">活在心灵牢笼中的人</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">10</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">7</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">10</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2021</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>ehxie</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
