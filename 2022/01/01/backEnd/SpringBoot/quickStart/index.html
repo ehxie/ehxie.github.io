@@ -1,0 +1,332 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="如果你想要  需要快速搭建个后台进行增删改查，而暂时不想要系统学习Spring框架 前端开发想要更好的模拟后端数据的返回 大学生期末大作业的后台CRUD  通过学习此文，你可以  快速搭建Springboot进行CRUD  为什么选择Springboot  传统SSM需要通过一些配置才能跑起来，而Springboot几乎开箱即用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速搭建Springboot进行CRUD">
+<meta property="og:url" content="http://example.com/2022/01/01/backEnd/SpringBoot/quickStart/index.html">
+<meta property="og:site_name" content="ehuixie&#39;s Blog">
+<meta property="og:description" content="如果你想要  需要快速搭建个后台进行增删改查，而暂时不想要系统学习Spring框架 前端开发想要更好的模拟后端数据的返回 大学生期末大作业的后台CRUD  通过学习此文，你可以  快速搭建Springboot进行CRUD  为什么选择Springboot  传统SSM需要通过一些配置才能跑起来，而Springboot几乎开箱即用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227185545028.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227185826003.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227190341847.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227190451955.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227190521558.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227190553801.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227191415683.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227191037152.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227191850567.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227192200800.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227194302265.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227195908801.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227200315629.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227221013120.png">
+<meta property="og:image" content="http://example.com/images/backEnd/quickStart/image-20211227222518733.png">
+<meta property="article:published_time" content="2021-12-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-04T01:01:29.051Z">
+<meta property="article:author" content="ehxie">
+<meta property="article:tag" content="curd demo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/backEnd/quickStart/image-20211227185545028.png"><title>快速搭建Springboot进行CRUD | ehuixie's Blog</title><link ref="canonical" href="http://example.com/2022/01/01/backEnd/SpringBoot/quickStart/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":false,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"dark","wordWrap":true},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner header-inner--height header-inner--bgcolor"><nav class="header-nav header-nav--sticky"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">快速搭建Springboot进行CRUD</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-01-01</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-01-04</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">1.8k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">13分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><p>如果你想要</p>
+<ul>
+<li>需要快速搭建个后台进行增删改查，而暂时不想要系统学习Spring框架</li>
+<li>前端开发想要更好的模拟后端数据的返回</li>
+<li>大学生期末大作业的后台CRUD</li>
+</ul>
+<p>通过学习此文，你可以</p>
+<ul>
+<li>快速搭建Springboot进行CRUD</li>
+</ul>
+<p>为什么选择Springboot</p>
+<ul>
+<li>传统SSM需要通过一些配置才能跑起来，而Springboot几乎开箱即用</li>
+</ul>
+<span id="more"></span>
+
+
+        <h1 id="前期准备"   >
+          <a href="#前期准备" class="heading-link"><i class="fas fa-link"></i></a><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h1>
+      <p>需要掌握的知识</p>
+<ul>
+<li>Java语言</li>
+<li>mysql</li>
+</ul>
+<p>安装的环境和工具(可自行替换)</p>
+<ul>
+<li>IntelliJ IDEA 2019.3.3</li>
+<li>mysql 5.7</li>
+<li>navicat</li>
+</ul>
+
+        <h1 id="项目初始化"   >
+          <a href="#项目初始化" class="heading-link"><i class="fas fa-link"></i></a><a href="#项目初始化" class="headerlink" title="项目初始化"></a>项目初始化</h1>
+      
+        <h2 id="新建项目"   >
+          <a href="#新建项目" class="heading-link"><i class="fas fa-link"></i></a><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h2>
+      <p>1.新建项目，选择Spring InitializrJDK选择 1.8，默认创建方式，然后点击Next</p>
+<p><img src="/images/backEnd/quickStart/image-20211227185545028.png" alt="image-20211227185545028"></p>
+<p>2.Java Version选8，其他可以默认，点击Next</p>
+<p><img src="/images/backEnd/quickStart/image-20211227185826003.png" alt="image-20211227185826003"></p>
+<p>3.选择依赖(按下方选择)，选择完成可以看到右边的选择列表，然后点击Next</p>
+<ul>
+<li>Web<ul>
+<li>Spring Web</li>
+</ul>
+</li>
+<li>Template Engines<ul>
+<li>Thymeleaf</li>
+</ul>
+</li>
+<li>SQL<ul>
+<li>JDBC API</li>
+<li>MySQl Driver</li>
+<li>Mybatis Framework</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/backEnd/quickStart/image-20211227190341847.png" alt="image-20211227190341847"></p>
+<p>4.点击finish</p>
+<p><img src="/images/backEnd/quickStart/image-20211227190451955.png" alt="image-20211227190451955"></p>
+<p>5.如果有以下询问，点击new window</p>
+<p><img src="/images/backEnd/quickStart/image-20211227190521558.png" alt="image-20211227190521558"></p>
+<p>6.打开项目后，点击右下角</p>
+<ul>
+<li>Enable Auto Import<ul>
+<li>自动导入依赖</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/backEnd/quickStart/image-20211227190553801.png" alt="image-20211227190553801"></p>
+
+        <h2 id="配置数据库"   >
+          <a href="#配置数据库" class="heading-link"><i class="fas fa-link"></i></a><a href="#配置数据库" class="headerlink" title="配置数据库"></a>配置数据库</h2>
+      <p>1.用navicat新建数据库<code>mybatisdb</code>，并新建一张表user</p>
+<p><img src="/images/backEnd/quickStart/image-20211227191415683.png" alt="image-20211227191415683"></p>
+<p>2.修改配置文件</p>
+<p><img src="/images/backEnd/quickStart/image-20211227191037152.png" alt="image-20211227191037152"></p>
+<ul>
+<li>数据库名称对应上面数据库名称</li>
+<li>url：jdbc:mysql://localhost:3306/数据库名称?serverTimezone=Asia/Shanghai&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;useSSL=false&amp;allowPublicKeyRetrieval=true</li>
+<li>用户名和密码修改为你自己的</li>
+</ul>
+<figure class="highlight properties"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#数据库名称</span></span><br><span class="line"><span class="meta">spring.datasource.name</span>=<span class="string">mybatisdb</span></span><br><span class="line"><span class="comment">#数据库连接url</span></span><br><span class="line"><span class="meta">spring.datasource.url</span>= <span class="string">jdbc:mysql://localhost:3306/mybatisdb?serverTimezone=Asia/Shanghai&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;useSSL=false&amp;allowPublicKeyRetrieval=true</span></span><br><span class="line"><span class="comment">#用户名</span></span><br><span class="line"><span class="meta">spring.datasource.username</span>=<span class="string">root</span></span><br><span class="line"><span class="comment">#密码</span></span><br><span class="line"><span class="meta">spring.datasource.password</span>=<span class="string">root</span></span><br><span class="line"><span class="comment">#数据库驱动</span></span><br><span class="line"><span class="meta">spring.datasource.driver-class-name</span>=<span class="string">com.mysql.cj.jdbc.Driver</span></span><br></pre></td></tr></table></div></figure>
+
+
+        <h2 id="启动项目"   >
+          <a href="#启动项目" class="heading-link"><i class="fas fa-link"></i></a><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h2>
+      <p>在项目启动类中添加一句数据，点击运行后就可以看到项目已经可以跑起来了！</p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;SpringBoot Start&quot;</span>);</span><br></pre></td></tr></table></div></figure>
+
+<p><img src="/images/backEnd/quickStart/image-20211227191850567.png" alt="image-20211227191850567"></p>
+
+        <h1 id="CRUD"   >
+          <a href="#CRUD" class="heading-link"><i class="fas fa-link"></i></a><a href="#CRUD" class="headerlink" title="CRUD"></a>CRUD</h1>
+      
+        <h2 id="准备工作"   >
+          <a href="#准备工作" class="heading-link"><i class="fas fa-link"></i></a><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2>
+      <p>1.在demo下新建几个包</p>
+<ul>
+<li>controller：处理事务，处理请求和响应</li>
+<li>mapper：操作数据库<ul>
+<li>编写SQL语句，对数据库进行增删查改</li>
+</ul>
+</li>
+<li>model：对象模型<ul>
+<li>数据库user表有name和age字段，则该包中就可以有一个类User，有name和age属性</li>
+</ul>
+</li>
+<li>service：编写业务代码</li>
+<li>utils：工具包，存放通用代码</li>
+</ul>
+<p><img src="/images/backEnd/quickStart/image-20211227192200800.png" alt="image-20211227192200800"></p>
+
+        <h3 id="模型"   >
+          <a href="#模型" class="heading-link"><i class="fas fa-link"></i></a><a href="#模型" class="headerlink" title="模型"></a>模型</h3>
+      <p>模型对象数据库中的表</p>
+<ul>
+<li>get、set快捷键<ul>
+<li>生成一个属性的get和set：在该行后面alt+enter<ul>
+<li>若电脑delete键与insert键是共用一键，则使用fn+alt+insert</li>
+</ul>
+</li>
+<li>生成多个属性的get和set：alt+insert</li>
+</ul>
+</li>
+</ul>
+<p>在model新建<code>User</code>类</p>
+<blockquote>
+<p>使用<code>@Entity</code>标签来说明它是一个实体类</p>
+<p>使用<code>@Table(name = &quot;students&quot;)</code>标签将实体类与数据库中的表进行映射</p>
+</blockquote>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table(name = &quot;user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">	<span class="comment">// get set省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p><img src="/images/backEnd/quickStart/image-20211227194302265.png" alt="image-20211227194302265"></p>
+
+        <h3 id="映射层"   >
+          <a href="#映射层" class="heading-link"><i class="fas fa-link"></i></a><a href="#映射层" class="headerlink" title="映射层"></a>映射层</h3>
+      <p>有两种写sql语句的方法(二选一即可)</p>
+
+        <h4 id="1-通过注释"   >
+          <a href="#1-通过注释" class="heading-link"><i class="fas fa-link"></i></a><a href="#1-通过注释" class="headerlink" title="1.通过注释"></a>1.通过注释</h4>
+      <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserMapper</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查询所有用户信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 用户信息列表</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Select(&quot;select * from user&quot;)</span></span><br><span class="line">    <span class="function">List&lt;User&gt; <span class="title">selectAllUser</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h4 id="2-通过配置文件写sql"   >
+          <a href="#2-通过配置文件写sql" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-通过配置文件写sql" class="headerlink" title="2.通过配置文件写sql"></a>2.通过配置文件写sql</h4>
+      <p>修改全局配置<code>application.properties</code>，新增以下内容</p>
+<ul>
+<li>配置映射文件<ul>
+<li>该路径为配置文件路径，即存放sql语句的路径</li>
+</ul>
+</li>
+<li>配置实体类<ul>
+<li>该路径需要修改为你自己的包路径</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>配置映射文件和实体类一一映射</p>
+</blockquote>
+<figure class="highlight properties"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#mybatis配置</span></span><br><span class="line"><span class="comment">#配置映射文件</span></span><br><span class="line"><span class="meta">mybatis.mapper-locations</span>=<span class="string">classpath:mapper/*.xml</span></span><br><span class="line"><span class="comment">#配置实体类</span></span><br><span class="line"><span class="meta">mybatis.type-aliases-package</span>=<span class="string">com.ehxie.demo.model</span></span><br></pre></td></tr></table></div></figure>
+
+<p>在mapper新建<code>UserMapper</code>接口</p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserMapper</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查询所有用户信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 用户信息列表</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">ArrayList&lt;User&gt; <span class="title">selectAllUser</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>在resources下新建mapper文件夹，在该文件夹中新建UserMapper.xml</p>
+<ul>
+<li>UserMapper.xml的命名需要与mapper中映射的类对应</li>
+</ul>
+<figure class="highlight xml"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span> <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span> &gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.ehxie.demo.mapper&quot;</span> &gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectAllUser&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.ehxie.demo.model.User&quot;</span>&gt;</span></span><br><span class="line">    select * from user</span><br><span class="line">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>编写sql语句后最好先测试一下是否达到预期</p>
+</blockquote>
+<p><img src="/images/backEnd/quickStart/image-20211227195908801.png" alt="image-20211227195908801"></p>
+<p>2.</p>
+
+        <h4 id="注入mapper"   >
+          <a href="#注入mapper" class="heading-link"><i class="fas fa-link"></i></a><a href="#注入mapper" class="headerlink" title="注入mapper"></a>注入mapper</h4>
+      <p>在SpringBoot中集成MyBatis，可以在mapper接口上添加@Mapper注解，将mapper注入到Spring。</p>
+<ul>
+<li>但是如果每一给mapper都添加@mapper注解会很麻烦</li>
+<li>可以使用@MapperScan注解来扫描包</li>
+</ul>
+<blockquote>
+<p>新增注解：@MapperScan(“com.ehxie.demo.mapper”)</p>
+</blockquote>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@MapperScan(&quot;com.ehxie.demo.mapper&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoApplication</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(DemoApplication.class, args);</span><br><span class="line">        System.out.println(<span class="string">&quot;SpringBoot Start&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>服务层</p>
+<p>在service新建<code>UserService</code>接口</p>
+<ul>
+<li>接口定义规范</li>
+</ul>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取所有用户信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">ArrayList&lt;User&gt; <span class="title">getAllUser</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>为接口做实现</p>
+<ul>
+<li>在service中新建impl包</li>
+<li>在impl包中新建<code>UserService</code>接口的实现类<code>UserServiceImpl</code></li>
+</ul>
+<blockquote>
+<p>该类需要注释：@Service</p>
+<p>自动导入Bean：@Autowired</p>
+</blockquote>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserMapper userMapper;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ArrayList&lt;User&gt; <span class="title">getAllUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> userMapper.selectAllUser();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p><img src="/images/backEnd/quickStart/image-20211227200315629.png" alt="image-20211227200315629"></p>
+
+        <h3 id="控制层"   >
+          <a href="#控制层" class="heading-link"><i class="fas fa-link"></i></a><a href="#控制层" class="headerlink" title="控制层"></a>控制层</h3>
+      <p>在controller新建<code>UserController</code>接口</p>
+<blockquote>
+<p>需要添加注释：@Controller</p>
+<p>映射路径注释：@RequestMapping(value = “/user”)</p>
+<ul>
+<li>代表访问该类路径为：协议:主机:端口/user，如果为默认即<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://localhost:8080/user" >http://localhost:8080/user</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+</ul>
+<p>需要将服务层对象注入：@Autowired</p>
+</blockquote>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/getAll&quot;)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">getAllUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> userService.getAllUser();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>启动项目，访问<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://localhost:8080/user/getAll" >http://localhost:8080/user/getAll</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><img src="/images/backEnd/quickStart/image-20211227221013120.png" alt="image-20211227221013120"></p>
+
+        <h3 id="pom"   >
+          <a href="#pom" class="heading-link"><i class="fas fa-link"></i></a><a href="#pom" class="headerlink" title="pom"></a>pom</h3>
+      <p>一些比较常用的依赖</p>
+<ul>
+<li>JSON格式化</li>
+</ul>
+<figure class="highlight xml"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--    将实体对象转换为JSON对象    --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.62<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></div></figure>
+
+<ul>
+<li>生成唯一key需要导入的包<ul>
+<li>@Id注解</li>
+<li>@GeneratedValue(strategy = GenerationType.IDENTITY)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight xml"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.persistence<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.persistence-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h3 id="数据库操作"   >
+          <a href="#数据库操作" class="heading-link"><i class="fas fa-link"></i></a><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h3>
+      <p>对数据库的CRUD实际上就是在写mapper</p>
+<p>修改下数据库的<code>user</code>表</p>
+<p><img src="/images/backEnd/quickStart/image-20211227222518733.png" alt="image-20211227222518733"></p>
+<figure class="highlight sql"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;姓名&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  `gender` <span class="type">int</span>(<span class="number">2</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;性别:0-未知，1-男，2-女&#x27;</span>,</span><br><span class="line">  `password` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;密码&#x27;</span>,</span><br><span class="line">  `register_date` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;注册日期&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>ascii;</span><br></pre></td></tr></table></div></figure>
+
+<p>修改model下的User</p>
+<ul>
+<li>@Id 标注用于声明一个实体类的属性映射为数据库的主键列</li>
+<li>@GeneratedValue 用于标注主键的生成策略，通过strategy 属性指定。<ul>
+<li>默认情况下，JPA 自动选择一个最适合底层数据库的主键生成策略：SqlServer对应identity，MySQL 对应 auto increment。 </li>
+<li>在javax.persistence.GenerationType中定义了以下几种可供选择的策略：<br>–IDENTITY：采用数据库ID自增长的方式来自增主键字段，Oracle 不支持这种方式；<br>–AUTO： JPA自动选择合适的策略，是默认选项；<br>–SEQUENCE：通过序列产生主键，通过@SequenceGenerator 注解指定序列名，MySql不支持这种方式<br>–TABLE：通过表产生主键，框架借由表模拟序列产生主键，使用该策略可以使应用更易于数据库移植。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue(strategy = GenerationType.IDENTITY)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> String gender;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">    <span class="keyword">private</span> Long register_date;</span><br><span class="line">    <span class="comment">// get set省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://github.com/ehxie/Springboot-demo/tree/feature-crud" >CRUD代码示例</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://github.com/ehxie/Springboot-demo/tree/feat-mapper%E4%BD%BF%E7%94%A8%E6%B3%A8%E8%A7%A3" >注解版代码示例</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">ehxie</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2022/01/01/backEnd/SpringBoot/quickStart/">http://example.com/2022/01/01/backEnd/SpringBoot/quickStart/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://example.com/tags/curd-demo/">curd demo</a></span></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2021/11/23/fontEnd/JavaScriptTimer/"><span class="paginator-prev__text">JavaScript实现精准倒计时</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">
+          前期准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">
+          项目初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="toc-number">2.1.</span> <span class="toc-text">
+          新建项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">2.2.</span> <span class="toc-text">
+          配置数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE"><span class="toc-number">2.3.</span> <span class="toc-text">
+          启动项目</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CRUD"><span class="toc-number">3.</span> <span class="toc-text">
+          CRUD</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">3.1.</span> <span class="toc-text">
+          准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.1.1.</span> <span class="toc-text">
+          模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%A0%E5%B0%84%E5%B1%82"><span class="toc-number">3.1.2.</span> <span class="toc-text">
+          映射层</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%80%9A%E8%BF%87%E6%B3%A8%E9%87%8A"><span class="toc-number">3.1.2.1.</span> <span class="toc-text">
+          1.通过注释</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E9%80%9A%E8%BF%87%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%86%99sql"><span class="toc-number">3.1.2.2.</span> <span class="toc-text">
+          2.通过配置文件写sql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5mapper"><span class="toc-number">3.1.2.3.</span> <span class="toc-text">
+          注入mapper</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E5%B1%82"><span class="toc-number">3.1.3.</span> <span class="toc-text">
+          控制层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pom"><span class="toc-number">3.1.4.</span> <span class="toc-text">
+          pom</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="toc-number">3.1.5.</span> <span class="toc-text">
+          数据库操作</span></a></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/touxiang.jpeg" alt="avatar"></div><p class="sidebar-ov-author__text">活在心灵牢笼中的人</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">11</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">9</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">11</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>ehxie</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
