@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="本文参考官方文档学习后总结了关于 Monorepo + Rush + PNPM 的入门实践，以更容易理解的方式组织了文章结构，如果你也需要构建一个大型多项目仓库，不妨可以看看本文  本文不对 Monorepo 做介绍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于 Rush 实现 Monorepo 的入门体验">
+<meta property="og:url" content="http://example.com/2022/04/09/fontEnd/monorepo_rush/index.html">
+<meta property="og:site_name" content="ehuixie&#39;s Blog">
+<meta property="og:description" content="本文参考官方文档学习后总结了关于 Monorepo + Rush + PNPM 的入门实践，以更容易理解的方式组织了文章结构，如果你也需要构建一个大型多项目仓库，不妨可以看看本文  本文不对 Monorepo 做介绍">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-09T15:27:00.000Z">
+<meta property="article:modified_time" content="2022-04-09T15:31:38.065Z">
+<meta property="article:author" content="ehxie">
+<meta property="article:tag" content="rush">
+<meta property="article:tag" content="pnpm">
+<meta name="twitter:card" content="summary"><title>基于 Rush 实现 Monorepo 的入门体验 | ehuixie's Blog</title><link ref="canonical" href="http://example.com/2022/04/09/fontEnd/monorepo_rush/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":false,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"dark","wordWrap":true},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner header-inner--height header-inner--bgcolor"><nav class="header-nav header-nav--sticky"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">基于 Rush 实现 Monorepo 的入门体验</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-04-09</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-04-09</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">3k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">18分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><p>本文参考官方文档学习后总结了关于 Monorepo + Rush + PNPM 的入门实践，以更容易理解的方式组织了文章结构，如果你也需要构建一个大型多项目仓库，不妨可以看看本文</p>
+<ul>
+<li>本文不对 Monorepo 做介绍</li>
+</ul>
+<span id="more"></span>
+
+        <h1 id="为什么需要-Rush？Rush-解决了什么问题？"   >
+          <a href="#为什么需要-Rush？Rush-解决了什么问题？" class="heading-link"><i class="fas fa-link"></i></a><a href="#为什么需要-Rush？Rush-解决了什么问题？" class="headerlink" title="为什么需要 Rush？Rush 解决了什么问题？"></a>为什么需要 Rush？Rush 解决了什么问题？</h1>
+      <blockquote>
+<p>rush是为大型团队准备的，它可以给你提供一个仓库下维护多个项目的构建和发布方案。</p>
+</blockquote>
+<p><strong>包管理存在的问题</strong>：当我们使用 Monorepo 的方式来组织项目时，为各项目安装依赖的过程中可能会出现各种问题（如<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://rushjs.io/zh-cn/pages/advanced/phantom_deps/" >幻影依赖(phantom dependencies)</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>、<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://rushjs.io/zh-cn/pages/advanced/npm_doppelgangers/" >NPM 分身(doppelgangers)</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>）</p>
+<ul>
+<li>Rush 使用符号链接来为每个项目重新构建一个准确的 “node_modules” 文件</li>
+<li>Rush 一次性安装全部原始依赖在 root 下的 common/temp 目录下，从该目录下提供 Symlink 给到个项目去引用。</li>
+</ul>
+
+        <h1 id="Rush-还有什么新特性？"   >
+          <a href="#Rush-还有什么新特性？" class="heading-link"><i class="fas fa-link"></i></a><a href="#Rush-还有什么新特性？" class="headerlink" title="Rush 还有什么新特性？"></a>Rush 还有什么新特性？</h1>
+      <ul>
+<li><p>提供项目间自动 link</p>
+</li>
+<li><p>多线程构建多项目，加快构建速度</p>
+</li>
+<li><p>自动检测有改动的项目，按配置产出版本号和 changelog</p>
+</li>
+</ul>
+
+        <h1 id="前置知识"   >
+          <a href="#前置知识" class="heading-link"><i class="fas fa-link"></i></a><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h1>
+      
+        <h2 id="shrinkwrap-文件"   >
+          <a href="#shrinkwrap-文件" class="heading-link"><i class="fas fa-link"></i></a><a href="#shrinkwrap-文件" class="headerlink" title="shrinkwrap 文件"></a>shrinkwrap 文件</h2>
+      <p>shrinkwrap 文件是 包管理器的一项功能。可以按照当前项目 node_modules 目录内的安装包情况生成稳定的<strong>版本号描述</strong>。</p>
+<ul>
+<li>可能是 <strong>shrinkwrap.yaml</strong>, <strong>npm-shrinkwrap.json</strong>, <strong>package-lock.json</strong>, 或 <strong>yarn.lock</strong></li>
+<li>由于我们并不知道你使用了哪种包管理工具，因此使用 “shrinkwrap” 来泛指这些文件。</li>
+</ul>
+<blockquote>
+<p>通常，包管理工具会在每个项目文件夹内创建 shrinkwrap 文件，但是在 Rush 中，整个项目共用存储在 <code> common/config/rush</code> “ 目录下的一个 shrinkwrap 文件，它会被存储在 Git 内。</p>
+<ul>
+<li>将所有依赖信息整合到单独一个 shrinkwrap 内有一些优势，例如减少冲突、方便查看 diff, 还能提高安装速度。</li>
+</ul>
+</blockquote>
+
+        <h1 id="快速开始"   >
+          <a href="#快速开始" class="heading-link"><i class="fas fa-link"></i></a><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h1>
+      
+        <h2 id="环境准备"   >
+          <a href="#环境准备" class="heading-link"><i class="fas fa-link"></i></a><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2>
+      <p>安装长期支持的 <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://nodejs.org/en/download/" >NodeJS</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>，当然也可以用 <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://github.com/nvm-sh/nvm" >nvm</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 去管理 NodeJS 的版本</p>
+<blockquote>
+<p>以 win 10 演示</p>
+</blockquote>
+
+        <h2 id="Rush-应该结合哪个包管理工具呢？"   >
+          <a href="#Rush-应该结合哪个包管理工具呢？" class="heading-link"><i class="fas fa-link"></i></a><a href="#Rush-应该结合哪个包管理工具呢？" class="headerlink" title="Rush 应该结合哪个包管理工具呢？"></a>Rush 应该结合哪个包管理工具呢？</h2>
+      <p>目前比较主流的包管理工具有：NPM、YARN、PNPM</p>
+<p>用哪个包管理工具都是视需求而定的，每个包管理工具都有自己的<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://rushjs.io/zh-cn/pages/maintainer/package_managers/" >利弊</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>，但<strong>如果是 Monorepo + Rush，则推荐用 PNPM</strong></p>
+<ul>
+<li>PNPM 能解决 NPM 分身的问题，因为复杂的 Monorepo 中这个问题还是比较容易出现的</li>
+</ul>
+
+        <h2 id="安装-Rush"   >
+          <a href="#安装-Rush" class="heading-link"><i class="fas fa-link"></i></a><a href="#安装-Rush" class="headerlink" title="安装 Rush"></a>安装 Rush</h2>
+      <p>全局安装 Rush（以管理员身份运行命令行窗口）</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装</span></span><br><span class="line">npm install -g @microsoft/rush</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 帮助手册(如果有显示则表示安装成功)</span></span><br><span class="line">rush -h</span><br></pre></td></tr></table></div></figure>
+
+
+        <h2 id="目录规范"   >
+          <a href="#目录规范" class="heading-link"><i class="fas fa-link"></i></a><a href="#目录规范" class="headerlink" title="目录规范"></a>目录规范</h2>
+      <ul>
+<li>apps：MWA 应用，如 Web、H5、Electron 应用等</li>
+<li>examples：模板、示例、演示项目等</li>
+<li>features：可复用的业务模块<ul>
+<li>如请求状态码的处理</li>
+<li>需要客户端和服务端共用部分逻辑</li>
+</ul>
+</li>
+<li>services 后端服务</li>
+</ul>
+
+        <h2 id="开启新项目"   >
+          <a href="#开启新项目" class="heading-link"><i class="fas fa-link"></i></a><a href="#开启新项目" class="headerlink" title="开启新项目"></a>开启新项目</h2>
+      <p>目的：使用 rush 实现 monorepo 项目管理</p>
+
+        <h3 id="初始化"   >
+          <a href="#初始化" class="heading-link"><i class="fas fa-link"></i></a><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3>
+      <p>1.新建 gitlab 仓库 <code>monorepo-rush</code></p>
+<ul>
+<li>克隆到本地</li>
+<li>进入仓库后进行初始化</li>
+</ul>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rush init</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交到仓库(这个看个人选择)</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m &#x27;initial&#x27;</span><br><span class="line">git push</span><br></pre></td></tr></table></div></figure>
+
+<p>主要生成以下目录，<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://rushjs.io/zh-cn/pages/advanced/config_files/" >更多请查看</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<figure class="highlight js"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">monorepo-rush</span><br><span class="line">├─ .gitattributes <span class="comment">// 告诉 Git 不要对哪些 shrinkwrap 文件进行合并，因为该操作并不安全(如果不用 git 可以删除)</span></span><br><span class="line">├─ .gitignore <span class="comment">// 告知 Git 不要跟踪哪些文件(如果不用 git 可以删除)</span></span><br><span class="line">├─ .travis.yml <span class="comment">// 配置 Travis CI 服务来在 PR 中使用 Rush	(如果不用 Travis 可以删除)</span></span><br><span class="line">├─ common</span><br><span class="line">│  ├─ config</span><br><span class="line">│  │  └─ rush</span><br><span class="line">│  │     ├─ .pnpmfile.cjs <span class="comment">// 用于解决 package.json 文件下错误的依赖关系(如果不使用 PNPM 可以删除)</span></span><br><span class="line">│  │     ├─ .npmrc <span class="comment">// Rush 用该文件配置源，无论是 PNPM, NPM 或者 Yarn</span></span><br><span class="line">│  │     ├─ command-line.json <span class="comment">// 用于自定义 Rush 的命令行命令或参数</span></span><br><span class="line">│  │     ├─ common-versions.json <span class="comment">// 用于指定 NPM 包的版本，它影响 Rush 仓库下所有项目</span></span><br><span class="line">│  │     └─ version-policies.json <span class="comment">// 用于定义发布配置</span></span><br><span class="line">└─ rush.json <span class="comment">// Rush 内主要的配置文件</span></span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>如果你的分支中已经存在这些文件，<code>rush init</code> 将会发出警告并且不会覆盖已有的文件</p>
+</blockquote>
+
+        <h3 id="自定义配置"   >
+          <a href="#自定义配置" class="heading-link"><i class="fas fa-link"></i></a><a href="#自定义配置" class="headerlink" title="自定义配置"></a>自定义配置</h3>
+      <blockquote>
+<p>配置文件中已经有大量的示例了</p>
+</blockquote>
+<p><strong>rush.json</strong> 必须要了解的几个配置</p>
+<figure class="highlight json"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;rushVersion&quot;</span>: <span class="string">&quot;5.66.0&quot;</span>, <span class="comment">// Rush 版本，尽量保持最新的：https://www.npmjs.com/package/@microsoft/rush</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">      * 选定包选择器及其版本。</span></span><br><span class="line"><span class="comment">      * Rush 会安装适用于自身版本的包管理器，这可以保证构建过程和本地环境隔离。</span></span><br><span class="line"><span class="comment">      *</span></span><br><span class="line"><span class="comment">      * 选中一个包选择器：&quot;pnpmVersion&quot;, &quot;npmVersion&quot;, 或 &quot;yarnVersion&quot;。</span></span><br><span class="line"><span class="comment">      * 默认是 pnpm</span></span><br><span class="line"><span class="comment">      * 选完后，删除 common/config/rush 中之前的 shrinkwrap 文件和其他包管理器相关文件。（否则 Rush 将会报告不支持配置文件），然后运行 rush update --full --purge</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">    <span class="attr">&quot;pnpmVersion&quot;</span>: <span class="string">&quot;2.15.1&quot;</span>,</span><br><span class="line">    <span class="comment">// &quot;npmVersion&quot;: &quot;4.5.0&quot;,</span></span><br><span class="line">    <span class="comment">// &quot;yarnVersion&quot;: &quot;1.9.4&quot;,</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 是否使用“类别目录”模型</span></span><br><span class="line">    <span class="comment">// 参考 projectFolderMinDepth 和 projectFolderMaxDepth 的注释</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 配置源的访问权限</span></span><br><span class="line">    <span class="comment">// 初始的 .npmrc 被配置为使用公开的 NPM 源。如果你将要使用私有源，你应该更新 common/config/rush/.npmrc 文件。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h3 id="新建-React-项目"   >
+          <a href="#新建-React-项目" class="heading-link"><i class="fas fa-link"></i></a><a href="#新建-React-项目" class="headerlink" title="新建 React 项目"></a>新建 React 项目</h3>
+      <p>根据规范，前端项目需要在根目录的 <code>apps</code> 目录下创建</p>
+<blockquote>
+<p>请自行安装脚手架</p>
+</blockquote>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir apps</span><br><span class="line">cd apps</span><br><span class="line"></span><br><span class="line">npx create-react-app my-app --template typescript</span><br></pre></td></tr></table></div></figure>
+
+<p>删除一些可能有影响的文件</p>
+<ul>
+<li>删除本地的 shrinkwrap 文件，因为它会被 Rush 的 shrinkwrap 文件代替。</li>
+<li>考虑删除 <strong>.npmrc</strong> 文件，因为 Rush 使用了 <strong>common/config/rush/.npmrc</strong>.</li>
+<li>考虑删除项目的 Git 配置文件，除非该项目有单独的配置。</li>
+</ul>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd my-apps</span><br><span class="line"></span><br><span class="line">rm -rf node_modules</span><br><span class="line">rm -rf shrinkwrap.yaml npm-shrinkwrap.json package-lock.json yarn.lock</span><br><span class="line">rm -rf .npmrc          # （如果存在的话）</span><br><span class="line">rm -rf .gitattributes  # （如果存在的话）</span><br><span class="line">rm -rf .gitignore      # （如果存在的话）</span><br></pre></td></tr></table></div></figure>
+
+<p>告知 Rush 需要接管 my-app 这个项目</p>
+<ul>
+<li>编辑 <strong>rush.json</strong></li>
+</ul>
+<figure class="highlight json"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;projects&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">&quot;packageName&quot;</span>: <span class="string">&quot;my-app&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;projectFolder&quot;</span>: <span class="string">&quot;apps/my-app&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p><strong>为什么 Rush 不能自动检测到这个项目？</strong></p>
+<p>Rush 并不会使用通配符来检测项目。该设计有以下考虑：</p>
+<ol>
+<li>深度优先搜索开销太大，尤其是需要重复收集列表时；</li>
+<li>在带有缓存的 CI 机器上，搜索可能会遗漏掉之前构建中的文件；</li>
+<li>集中式的管理所有项目以及其重要的元数据是很有用的，例如，可以让审批等策略更简单。</li>
+</ol>
+</blockquote>
+<p>执行 <code>rush update</code> 安装依赖</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rush update</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交到仓库(这个看个人选择)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 自行切换到根目录下</span></span><br><span class="line">git checkout -b dev</span><br><span class="line">git add .</span><br><span class="line">git commit -m &#x27;feat: add apps/my-app project&#x27;</span><br><span class="line">git push -u origin dev</span><br></pre></td></tr></table></div></figure>
+
+<p>如果这是仓库内的第一个项目，你将会发现 <code>rush update</code> 创建了一些新文件：</p>
+<ul>
+<li><strong>common/config/rush/pnpm-lock.yaml</strong>: 公共的 shrinkwrap 文件 (此处假定使用了 PNPM)</li>
+<li><strong>common/scripts/install-run-rush.js</strong>: 用于在 CI 任务中以一种可靠的方式来启动 Rush</li>
+<li><strong>common/scripts/install-run.js</strong>: 用于在 CI 任务中以一种可靠的方式来启动任意工具</li>
+</ul>
+
+        <h3 id="验证新项目是否构建成功"   >
+          <a href="#验证新项目是否构建成功" class="heading-link"><i class="fas fa-link"></i></a><a href="#验证新项目是否构建成功" class="headerlink" title="验证新项目是否构建成功"></a>验证新项目是否构建成功</h3>
+      <figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在根目录下</span></span><br><span class="line">rush build </span><br><span class="line"><span class="meta">#</span><span class="bash"> Rush 会寻找项目内的 **package.json** 文件内 `<span class="string">&quot;scripts&quot;</span>` 字段下的 `<span class="string">&quot;build&quot;</span>` 指令</span></span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>Rush 通常会使用系统的 PATH 环境变量来查找脚本，然而，如果你制定了诸如 “gulp” 或者 “make” 等单个单词的指令，Rush 会首先在 <code>common\temp\node_modules\.bin</code> 目录下查找该指令。</p>
+<p>如果进程返回非零退出码，Rush 将判定为失败，并阻塞随后的构建。</p>
+<p>如果指令对 <code>stderr</code> 存在任意输入，则 Rush 将以错误、警告报告等形式来解释该输入。这将会中断构建流程（设计如此，如果你允许开发者以这种 “狼来了” 的形式合并 PR，很快你就会发现，报警提示很快就会堆积到没人再去看它们）。诸如 Jest 等的工具库认为向 <code>stderr</code> 写入信息是常见操作，对此需要你<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://github.com/microsoft/rushstack-legacy/blob/main/core-build/gulp-core-build/src/tasks/JestReporter.ts#L14" >重定向它们的输出</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>.</p>
+<p>即使某个项目不需要被 <code>rush build</code> 处理，你依然需要保留 <code>build</code> 字段，将其设定为空字符串(<code>&quot;&quot;</code>) 后 Rush 会忽略它们。</p>
+</blockquote>
+
+        <h1 id="常用命令"   >
+          <a href="#常用命令" class="heading-link"><i class="fas fa-link"></i></a><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1>
+      
+        <h2 id="rush-update"   >
+          <a href="#rush-update" class="heading-link"><i class="fas fa-link"></i></a><a href="#rush-update" class="headerlink" title="rush update"></a>rush update</h2>
+      <ul>
+<li>当 <strong>package.json</strong> 文件发生变化时，请务必运行 <code>rush update</code></li>
+</ul>
+<p><code>rush update</code> 内做了些什么：</p>
+<ol>
+<li>Rush 检查或应用各种可能会改变 <strong>common/config</strong> 内文件的策略。</li>
+<li>Rush 会将所有项目内的 <strong>package.json</strong> 文件与仓库的公共 shrinkwrap 文件进行比较来检查是否有效。</li>
+<li>若无效，则包管理工具会更新 shrinkwrap 文件。</li>
+<li>无论如何，包管理工具都会将所有依赖安装到 <strong>common/temp/node_modules</strong> 目录下。</li>
+<li>最后，Rush 会给每个项目下构建一个 <strong>node_modules</strong> 文件夹，该文件夹下内容通过符合链接到 <strong>common/temp/node_modules</strong>. （该操作等同于 <code>rush link</code>）</li>
+</ol>
+<blockquote>
+<p>CI 流水线中使用 <code>rush install</code> 来替代 <code>rush update</code>, 二者的不同点是 <code>rush install</code> 不会更新任何文件，相反，如果存在过失的数据，则会在 PR 上报错，并提示你执行 <code>rush update</code> 或者提示你 commit 其结果。（一些开发者为了防止 shrinkwrap 文件中不符合预期的更新，他们选择使用 <code>rush install</code> 当作常用指令，而不是 <code>rush build</code>）</p>
+</blockquote>
+
+        <h2 id="rush-rebuild"   >
+          <a href="#rush-rebuild" class="heading-link"><i class="fas fa-link"></i></a><a href="#rush-rebuild" class="headerlink" title="rush rebuild"></a>rush rebuild</h2>
+      <ul>
+<li>给仓库内的所有项目执行一个完整的、清除式的构建。</li>
+<li>如果你的工具链支持增量构建，那么你可以执行 <code>rush build</code> 来构建那些变动过的项目。</li>
+</ul>
+
+        <h2 id="rushx"   >
+          <a href="#rushx" class="heading-link"><i class="fas fa-link"></i></a><a href="#rushx" class="headerlink" title="rushx"></a>rushx</h2>
+      <ul>
+<li>仅仅想构建一个项目，在对应的项目下运行 <code>rushx</code> 指令，该指令相当于 <code>npm run</code></li>
+</ul>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rushx build # npm run build</span><br></pre></td></tr></table></div></figure>
+
+
+        <h2 id="rush-change"   >
+          <a href="#rush-change" class="heading-link"><i class="fas fa-link"></i></a><a href="#rush-change" class="headerlink" title="rush change"></a>rush change</h2>
+      <p>如果你从事库会被 NPM 发布，那么你的仓库可能需要你在 PR 中添加相应的变更日志。如果没有添加，你的 PR 构建会在 <code>rush change --verify</code> 步骤失败。</p>
+<p>为了书写变更日志，首先需要把变动以 commit 的形式提交到 Git 中，之后在仓库下执行 <code>rush change</code>, 该指令会检查 Git 历史，并根据变动情况提示你为每个变化的项目书写更新日志。每一条日志会被存储在 <strong>common/changes</strong> 下的独立文件中。你应该把这些文件添加到 Git 中，以便于后续的提交。</p>
+<p>随后，Rush 的自动发布工作流会检查这些文件，以确定哪些包需要发布。它会删除这些文件，并将你的更新信息复制到包的 CHANGELOG.md 文件中。</p>
+<p>⏵ 查看 <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://rushjs.io/zh-cn/pages/best_practices/change_logs/" >更新日志编写</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 来获取更多写变更记录的提示。</p>
+
+        <h2 id="rush-scan"   >
+          <a href="#rush-scan" class="heading-link"><i class="fas fa-link"></i></a><a href="#rush-scan" class="headerlink" title="rush scan"></a>rush scan</h2>
+      <p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://rushjs.io/zh-cn/pages/commands/rush_scan/" >rush scan</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 指令可以快速地检查出幻影依赖的问题</p>
+
+        <h2 id="日常使用组合"   >
+          <a href="#日常使用组合" class="heading-link"><i class="fas fa-link"></i></a><a href="#日常使用组合" class="headerlink" title="日常使用组合"></a>日常使用组合</h2>
+      <figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 从 Git 获取最新的代码</span></span><br><span class="line">git pull</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 按需安装 NPM 包</span></span><br><span class="line">rush update</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 清理并重新构建所有项目</span></span><br><span class="line">rush rebuild</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 进入某个项目内</span></span><br><span class="line">cd ./my-project</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 假设 package.json 内存在 <span class="string">&quot;start&quot;</span> 指令。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> (通过 <span class="string">&quot;rushx&quot;</span> 来查看可用的命令)</span></span><br><span class="line">rushx start</span><br></pre></td></tr></table></div></figure>
+
+
+        <h1 id="注意事项"   >
+          <a href="#注意事项" class="heading-link"><i class="fas fa-link"></i></a><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1>
+      
+        <h2 id="不要用包管理工具安装或链接依赖"   >
+          <a href="#不要用包管理工具安装或链接依赖" class="heading-link"><i class="fas fa-link"></i></a><a href="#不要用包管理工具安装或链接依赖" class="headerlink" title="不要用包管理工具安装或链接依赖"></a>不要用包管理工具安装或链接依赖</h2>
+      <p>Rush 会在某个中心文件夹安装所有的依赖，之后使用<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Symbolic_link" >符号链接</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>给每个项目创建 “node_modules” 文件夹。</p>
+<ul>
+<li><strong>不要使用包管理工具来安装或链接依赖。</strong><ul>
+<li>避免使用 <code>npm install </code>、<code>pnpm install </code>、<code>yarn install </code>等操作，这些命令会干扰 rush 的符号连接。如果要使用，<strong>必须</strong>先执行 <code>rush unlink</code> 清除符号链接</li>
+</ul>
+</li>
+<li>如果想执行 <code>git clean -dfx</code> 清理文件夹，<strong>必须</strong>先执行 <code>rush unlink</code> 清除符号链接，因为它对符号链接的处理并不好</li>
+</ul>
+<p>如何重新生成符合链接？</p>
+<ul>
+<li>rush update</li>
+</ul>
+
+        <h2 id="强制重装所有包"   >
+          <a href="#强制重装所有包" class="heading-link"><i class="fas fa-link"></i></a><a href="#强制重装所有包" class="headerlink" title="强制重装所有包"></a>强制重装所有包</h2>
+      <p>Rush 的包管理工具命令是“增量”式的，Rush 有很多措施保证正确性。但是当你在本地调试时，有时会导致你的 NPM “node_modules” 文件夹变得不正确，最终导致奇怪的错误。</p>
+<ul>
+<li>执行 <code>rush update --purge</code> 强制重新安装所有包</li>
+</ul>
+
+        <h1 id="最后"   >
+          <a href="#最后" class="heading-link"><i class="fas fa-link"></i></a><a href="#最后" class="headerlink" title="最后"></a>最后</h1>
+      <p>这里只是rush 的入门学习指引，更多内容可以查阅<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://rushjs.io/zh-cn/pages/intro/get_started/" >官网</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>进行学习</p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">ehxie</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2022/04/09/fontEnd/monorepo_rush/">http://example.com/2022/04/09/fontEnd/monorepo_rush/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://example.com/tags/rush/">rush</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://example.com/tags/pnpm/">pnpm</a></span></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2022/01/01/backEnd/SpringBoot/quickStart/"><span class="paginator-prev__text">快速搭建Springboot进行CRUD</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-Rush%EF%BC%9FRush-%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">
+          为什么需要 Rush？Rush 解决了什么问题？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Rush-%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88%E6%96%B0%E7%89%B9%E6%80%A7%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">
+          Rush 还有什么新特性？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">3.</span> <span class="toc-text">
+          前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#shrinkwrap-%E6%96%87%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text">
+          shrinkwrap 文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B"><span class="toc-number">4.</span> <span class="toc-text">
+          快速开始</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">4.1.</span> <span class="toc-text">
+          环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rush-%E5%BA%94%E8%AF%A5%E7%BB%93%E5%90%88%E5%93%AA%E4%B8%AA%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%91%A2%EF%BC%9F"><span class="toc-number">4.2.</span> <span class="toc-text">
+          Rush 应该结合哪个包管理工具呢？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Rush"><span class="toc-number">4.3.</span> <span class="toc-text">
+          安装 Rush</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E8%A7%84%E8%8C%83"><span class="toc-number">4.4.</span> <span class="toc-text">
+          目录规范</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E6%96%B0%E9%A1%B9%E7%9B%AE"><span class="toc-number">4.5.</span> <span class="toc-text">
+          开启新项目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">4.5.1.</span> <span class="toc-text">
+          初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE"><span class="toc-number">4.5.2.</span> <span class="toc-text">
+          自定义配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA-React-%E9%A1%B9%E7%9B%AE"><span class="toc-number">4.5.3.</span> <span class="toc-text">
+          新建 React 项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E6%96%B0%E9%A1%B9%E7%9B%AE%E6%98%AF%E5%90%A6%E6%9E%84%E5%BB%BA%E6%88%90%E5%8A%9F"><span class="toc-number">4.5.4.</span> <span class="toc-text">
+          验证新项目是否构建成功</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text">
+          常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#rush-update"><span class="toc-number">5.1.</span> <span class="toc-text">
+          rush update</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rush-rebuild"><span class="toc-number">5.2.</span> <span class="toc-text">
+          rush rebuild</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rushx"><span class="toc-number">5.3.</span> <span class="toc-text">
+          rushx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rush-change"><span class="toc-number">5.4.</span> <span class="toc-text">
+          rush change</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rush-scan"><span class="toc-number">5.5.</span> <span class="toc-text">
+          rush scan</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E7%BB%84%E5%90%88"><span class="toc-number">5.6.</span> <span class="toc-text">
+          日常使用组合</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text">
+          注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E8%A6%81%E7%94%A8%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85%E6%88%96%E9%93%BE%E6%8E%A5%E4%BE%9D%E8%B5%96"><span class="toc-number">6.1.</span> <span class="toc-text">
+          不要用包管理工具安装或链接依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%BA%E5%88%B6%E9%87%8D%E8%A3%85%E6%89%80%E6%9C%89%E5%8C%85"><span class="toc-number">6.2.</span> <span class="toc-text">
+          强制重装所有包</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number">7.</span> <span class="toc-text">
+          最后</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/touxiang.jpeg" alt="avatar"></div><p class="sidebar-ov-author__text">活在心灵牢笼中的人</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">13</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">10</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">13</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>ehxie</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
